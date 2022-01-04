@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class SpriteStretch : MonoBehaviour
 {
+    private Vector3 offset;
+
     public bool KeepAspectRatio;
 
     void Start()
     {
+        offset = transform.position - Camera.main.transform.position;
+
         var topRightCorner = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         var worldSpaceWidth = topRightCorner.x * 2;
         var worldSpaceHeight = topRightCorner.y * 2;
@@ -30,5 +34,10 @@ public class SpriteStretch : MonoBehaviour
         }
 
         gameObject.transform.localScale = new Vector3(scaleFactorX, scaleFactorY, 1);
+    }
+
+    private void LateUpdate()
+    {
+        gameObject.transform.position = Camera.main.transform.position + offset;
     }
 }
