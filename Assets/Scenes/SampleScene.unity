@@ -417,7 +417,7 @@ MonoBehaviour:
   gravityForce: 8
   airResistence: 0.25
   jumpForce: 5
-  timeBetweenJump: 0.2
+  timeBetweenJump: 0.4
   distancePowerfullJump: 1.8
   jumpMaxForce: 1.3
   mapCollider: {fileID: 1165497864}
@@ -454,7 +454,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 0292575f474d76d43b689b5c311cb646, type: 2}
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0

@@ -53,10 +53,18 @@ public class PlayerBehaviour : MonoBehaviour
     {
         // Collision avec le sols
         RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, -Vector3.up, (capc.size.y / 2f) + offsetGroundDistance);
+        
         if (!downHits.Any(x => x.collider != capc && x.collider == mapCollider)) // Si pas de collision alors
         { 
             // Appliquation gravité
             force.y -= gravityForce * Time.deltaTime;
+        }
+        else
+        {
+            if (Time.time - lastJump >= timeBetweenJump)
+            {
+                force.y = 0f;
+            }
         }
 
         // Collision avec le plafond
@@ -64,7 +72,7 @@ public class PlayerBehaviour : MonoBehaviour
         if (upHits.Any(x => x.collider != capc && x.collider == mapCollider)) // Si collision avec le plafond
         {
             // Annulation des forces vertical
-            force.y = 0f;
+            force.y = -1;
         }
 
         // Les inputs
