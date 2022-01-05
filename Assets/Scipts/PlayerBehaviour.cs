@@ -9,6 +9,7 @@ public class PlayerBehaviour : MonoBehaviour
 {
     private float lastJump;
     private float horizontalVelocity;
+    private Vector2 velocity;
     private Vector2 force;
     private CapsuleCollider2D capc;
     private Rigidbody2D rb;
@@ -18,7 +19,6 @@ public class PlayerBehaviour : MonoBehaviour
     private float gravityForce = 14f;
 
     [SerializeField]
-    [Range(0f, 1f)]
     private float airResistence = 0.01f;
 
     [Header("Movement :")]
@@ -72,7 +72,7 @@ public class PlayerBehaviour : MonoBehaviour
         if (upHits.Any(x => x.collider != capc && x.collider == mapCollider)) // Si collision avec le plafond
         {
             // Annulation des forces vertical
-            force.y = -1;
+            force.y = -1f;
         }
 
         // Les inputs
@@ -83,18 +83,21 @@ public class PlayerBehaviour : MonoBehaviour
             var pos2D = new Vector2(transform.position.x, transform.position.y);
 
             // Calcul de la direction et de la force du saut
-            var direction = (pos2D - mousePos2D).normalized;
-            var jump = Vector2.Distance(mousePos2D, pos2D) <= distancePowerfullJump ? (jumpForce * jumpMaxForce) : jumpForce;
+            var direction = (mousePos2D - pos2D).normalized;
+            var jump = Vector2.Distance(mousePos2D, pos2D) >= distancePowerfullJump ? (jumpForce * jumpMaxForce) : jumpForce;
             
             // Application des force et reset du jump time
             force = direction * jump;
             lastJump = Time.time;
         }
+    }
 
+    private void FixedUpdate()
+    {
         // Application de la résistance de l'air
-        force.x = Mathf.SmoothDamp(force.x, 0f, ref horizontalVelocity, 1 - airResistence);
+        force.x = Mathf.SmoothDamp(force.x, 0f, ref horizontalVelocity, 300f * (1 - airResistence) * Time.fixedDeltaTime);
 
         // Application des toutes les forces sur le rigidbody
-        rb.velocity = Vector2.Lerp(rb.velocity, force, 0.05f);
+        rb.velocity = Vector2.SmoothDamp(rb.velocity, force, ref velocity, Time.fixedDeltaTime);
     }
 }
