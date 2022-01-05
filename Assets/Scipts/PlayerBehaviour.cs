@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider2D))]
@@ -7,7 +8,7 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
     private float lastJump;
-    private Vector2 velocity;
+    private float horizontalVelocity;
     private Vector2 force;
     private CapsuleCollider2D capc;
     private Rigidbody2D rb;
@@ -15,6 +16,10 @@ public class PlayerBehaviour : MonoBehaviour
     [Header("Physique :")]
     [SerializeField]
     private float gravityForce = 14f;
+
+    [SerializeField]
+    [Range(0f, 1f)]
+    private float airResistence = 0.01f;
 
     [Header("Movement :")]
     [SerializeField]
@@ -46,30 +51,42 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Update()
     {
-        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, -Vector3.up, (capc.size.y / 2f) + offsetGroundDistance);
-
-        if (hits.Length == 2 && hits[1].collider == mapCollider)
-        {
-            //force.y = 0f;
-            force.x = Mathf.Lerp(force.x, 0f, 0.005f);
-        }
-        else
-        {
+        // Collision avec le sols
+        RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, -Vector3.up, (capc.size.y / 2f) + offsetGroundDistance);
+        if (!downHits.Any(x => x.collider != capc && x.collider == mapCollider)) // Si pas de collision alors
+        { 
+            // Appliquation gravité
             force.y -= gravityForce * Time.deltaTime;
         }
 
+        // Collision avec le plafond
+        RaycastHit2D[] upHits = Physics2D.RaycastAll(transform.position, Vector3.up, (capc.size.y / 2f) + offsetGroundDistance);
+        if (upHits.Any(x => x.collider != capc && x.collider == mapCollider)) // Si collision avec le plafond
+        {
+            // Annulation des forces vertical
+            force.y = 0f;
+        }
+
+        // Les inputs
         if (Input.touchCount == 1 && Time.time - lastJump >= timeBetweenJump)
         {
+            // Recupération de la position du touché
             var mousePos2D = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
             var pos2D = new Vector2(transform.position.x, transform.position.y);
 
+            // Calcul de la direction et de la force du saut
             var direction = (pos2D - mousePos2D).normalized;
-            var jump = Vector2.Distance(mousePos2D, pos2D) >= distancePowerfullJump ? (jumpForce * jumpMaxForce) : jumpForce;
+            var jump = Vector2.Distance(mousePos2D, pos2D) <= distancePowerfullJump ? (jumpForce * jumpMaxForce) : jumpForce;
             
+            // Application des force et reset du jump time
             force = direction * jump;
             lastJump = Time.time;
         }
 
-        rb.velocity = Vector2.SmoothDamp(rb.velocity, force, ref velocity, 0.05f);
+        // Application de la résistance de l'air
+        force.x = Mathf.SmoothDamp(force.x, 0f, ref horizontalVelocity, 1 - airResistence);
+
+        // Application des toutes les forces sur le rigidbody
+        rb.velocity = Vector2.Lerp(rb.velocity, force, 0.05f);
     }
 }
