@@ -421,6 +421,7 @@ MonoBehaviour:
   timeBetweenJump: 0.7
   distancePowerfullJump: 1.8
   jumpMaxForce: 1.5
+  rotationSpeed: 50
   mapCollider: {fileID: 1538043389}
   offsetGroundDistance: 0.08
 --- !u!70 &1107238962
@@ -1929,7 +1930,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1802043570}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 1

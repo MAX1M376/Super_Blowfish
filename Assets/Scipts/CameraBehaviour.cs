@@ -13,7 +13,7 @@ public class CameraBehaviour : MonoBehaviour
 
     [Header("Object to follow :")]
     [SerializeField]
-    private Transform gameObject;
+    private new Transform gameObject;
 
     [Header("Behaviour :")]
     [Range(0f, 1f)]
@@ -40,14 +40,9 @@ public class CameraBehaviour : MonoBehaviour
         var minY = (tlmap.size.y + tlmap.transform.parent.position.y) * tlmap.cellSize.y / -2f;
         var maxY = (tlmap.size.y + tlmap.transform.parent.position.y) * tlmap.cellSize.y / 2f;
         var pos = offset + gameObject.position;
-        
+
         pos.x = Mathf.Clamp(topRightScreenWorld.x + pos.x, minX, maxX - screenWorldWidth) - topRightScreenWorld.x;
-        
-        Debug.Log($"Before : Min Y : {maxY + screenWorldHeight} / Actual Y : {topRightScreenWorld.y + pos.y} / Max Y : {minY}");
-
         pos.y = Mathf.Clamp(topRightScreenWorld.y + pos.y, maxY + screenWorldHeight, minY) - topRightScreenWorld.y;
-
-        Debug.Log($"After : Min Y : {maxY + screenWorldHeight} / Actual Y : {topRightScreenWorld.y + pos.y} / Max Y : {minY}");
 
         transform.position = Vector3.Lerp(transform.position, pos, smoothSpeed * Time.deltaTime * 300);
     }

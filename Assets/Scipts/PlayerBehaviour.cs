@@ -11,6 +11,7 @@ public class PlayerBehaviour : MonoBehaviour
     private float horizontalVelocity;
     private Vector2 velocity;
     private Vector2 force;
+    private Quaternion rotation;
     private CapsuleCollider2D capc;
     private Rigidbody2D rb;
 
@@ -35,6 +36,9 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField]
     [Range(1f, 5f)]
     private float jumpMaxForce = 1.2f;
+
+    [SerializeField]
+    private float rotationSpeed;
 
     [Header("Map :")]
     [SerializeField]
@@ -66,6 +70,7 @@ public class PlayerBehaviour : MonoBehaviour
                 force.y = 0f;
                 lastJump = 0f;
             }
+            rotation = Quaternion.Euler(0, 0, 0);
         }
 
         // Collision avec le plafond
@@ -97,6 +102,15 @@ public class PlayerBehaviour : MonoBehaviour
         {
             lastJump = 0f;
         }
+
+        // Tourne le sprite dans le direction
+        var angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+        var orientation = angle >= -90f && angle <= 90f ? 0f : 180f;
+        rotation = Quaternion.Euler(new Vector3(orientation, 0, orientation == 180f ? -angle : angle));
+
+        var euler = transform.GetChild(0).transform.localEulerAngles;
+        euler.y = orientation;
+        transform.GetChild(0).transform.localEulerAngles = euler;
     }
 
     private void FixedUpdate()
@@ -106,5 +120,8 @@ public class PlayerBehaviour : MonoBehaviour
 
         // Application des toutes les forces sur le rigidbody
         rb.velocity = Vector2.SmoothDamp(rb.velocity, force, ref velocity, Time.fixedDeltaTime);
+
+        // Application de la rotation du sprite en fnction de la direction
+        transform.GetChild(0).transform.localRotation = Quaternion.Slerp(transform.GetChild(0).transform.localRotation, rotation, Time.fixedDeltaTime * rotationSpeed);
     }
 }
