@@ -8,6 +8,7 @@ public class CameraBehaviour : MonoBehaviour
     private Camera cam;
     private Vector3 offset;
     private float screenWorldWidth;
+    private float screenWorldHeight;
     private Vector3 topRightScreenWorld;
 
     [Header("Object to follow :")]
@@ -28,6 +29,7 @@ public class CameraBehaviour : MonoBehaviour
         cam = GetComponent<Camera>();
         offset = transform.position - gameObject.position;
         screenWorldWidth = cam.ScreenToWorldPoint(Vector3.right * cam.pixelWidth).x - cam.ScreenToWorldPoint(Vector3.zero).x;
+        screenWorldHeight = cam.ScreenToWorldPoint(Vector3.down * cam.pixelHeight).y - cam.ScreenToWorldPoint(Vector3.zero).y;
         topRightScreenWorld = cam.ScreenToWorldPoint(Vector3.zero) - transform.position;
     }
 
@@ -35,9 +37,18 @@ public class CameraBehaviour : MonoBehaviour
     {
         var minX = (tlmap.size.x + tlmap.transform.parent.position.x) * tlmap.cellSize.x / -2f;
         var maxX = (tlmap.size.x + tlmap.transform.parent.position.x) * tlmap.cellSize.x / 2f;
+        var minY = (tlmap.size.y + tlmap.transform.parent.position.y) * tlmap.cellSize.y / -2f;
+        var maxY = (tlmap.size.y + tlmap.transform.parent.position.y) * tlmap.cellSize.y / 2f;
         var pos = offset + gameObject.position;
         
-        pos.x = Mathf.Clamp(topRightScreenWorld.x + pos.x, minX, maxX - screenWorldWidth) + screenWorldWidth / 2f;
+        pos.x = Mathf.Clamp(topRightScreenWorld.x + pos.x, minX, maxX - screenWorldWidth) - topRightScreenWorld.x;
+        
+        Debug.Log($"Before : Min Y : {maxY + screenWorldHeight} / Actual Y : {topRightScreenWorld.y + pos.y} / Max Y : {minY}");
+
+        pos.y = Mathf.Clamp(topRightScreenWorld.y + pos.y, maxY + screenWorldHeight, minY) - topRightScreenWorld.y;
+
+        Debug.Log($"After : Min Y : {maxY + screenWorldHeight} / Actual Y : {topRightScreenWorld.y + pos.y} / Max Y : {minY}");
+
         transform.position = Vector3.Lerp(transform.position, pos, smoothSpeed * Time.deltaTime * 300);
     }
 }

@@ -52,9 +52,9 @@ public class PlayerBehaviour : MonoBehaviour
     private void Update()
     {
         // Collision avec le sols
-        RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, -Vector3.up, (capc.size.y / 2f) + offsetGroundDistance);
+        RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, Vector2.down, (capc.size.y / 2f) + offsetGroundDistance);
         
-        if (!downHits.Any(x => x.collider != capc && x.collider == mapCollider)) // Si pas de collision alors
+        if (!downHits.Any(x => x.collider.gameObject.name == mapCollider.gameObject.name)) // Si pas de collision alors
         { 
             // Appliquation gravité
             force.y -= gravityForce * Time.deltaTime;
@@ -64,12 +64,13 @@ public class PlayerBehaviour : MonoBehaviour
             if (Time.time - lastJump >= timeBetweenJump)
             {
                 force.y = 0f;
+                lastJump = 0f;
             }
         }
 
         // Collision avec le plafond
-        RaycastHit2D[] upHits = Physics2D.RaycastAll(transform.position, Vector3.up, (capc.size.y / 2f) + offsetGroundDistance);
-        if (upHits.Any(x => x.collider != capc && x.collider == mapCollider)) // Si collision avec le plafond
+        RaycastHit2D[] upHits = Physics2D.RaycastAll(transform.position, Vector2.up, (capc.size.y / 2f) + offsetGroundDistance);
+        if (upHits.Any(x => x.collider.gameObject.name == mapCollider.gameObject.name)) // Si collision avec le plafond
         {
             // Annulation des forces vertical
             force.y = -1f;
@@ -89,6 +90,12 @@ public class PlayerBehaviour : MonoBehaviour
             // Application des force et reset du jump time
             force = direction * jump;
             lastJump = Time.time;
+        }
+
+        // Reduction le temps entre chaque si spam clic
+        if (Input.touchCount == 0 && Time.time - lastJump <= timeBetweenJump)
+        {
+            lastJump = 0f;
         }
     }
 

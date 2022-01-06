@@ -418,10 +418,10 @@ MonoBehaviour:
   gravityForce: 9
   airResistence: 0.9
   jumpForce: 4
-  timeBetweenJump: 0.4
+  timeBetweenJump: 0.7
   distancePowerfullJump: 1.8
   jumpMaxForce: 1.5
-  mapCollider: {fileID: 0}
+  mapCollider: {fileID: 1538043389}
   offsetGroundDistance: 0.08
 --- !u!70 &1107238962
 CapsuleCollider2D:
