@@ -67,7 +67,9 @@ public class PlayerBehaviour : MonoBehaviour
         {
             if (Time.time - lastJump >= timeBetweenJump)
             {
-                force.y = 0f;
+                var velo = rb.velocity;
+                velo.y = 0f;
+                rb.velocity = velo;
                 lastJump = 0f;
             }
             rotation = Quaternion.Euler(0, 0, 0);
