@@ -73,13 +73,13 @@ public class PlayerBehaviour : MonoBehaviour
         RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, Vector2.down, (capc.size.y / 2f) + offsetGroundDistance);
         
         if (!downHits.Any(x => x.collider.gameObject.name == mapName)) // Si pas de collision alors
-        { 
+        {
             // Appliquation gravité
             force.y -= (isOnWater ? gravityForceOnWater : gravityForce) * Time.deltaTime;
         }
         else
         {
-            if (Time.time - lastJump >= timeBetweenJump)
+            if (Time.time - lastJump >= timeBetweenJump) // Si le personnage touche le sol et ne peut pas sauté
             {
                 var velo = rb.velocity;
                 velo.y = 0f;
