@@ -94,7 +94,7 @@ MonoBehaviour:
   timeBetweenJumpOnWater: 0.3
   distancePowerfullJump: 1.8
   jumpMaxForce: 1.5
-  rotationSpeed: 50
+  rotationSpeed: 20
   mapName: Map
   offsetGroundDistance: 0.08
   isOnWater: 0

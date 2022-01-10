@@ -14,7 +14,7 @@ public class OnWater : MonoBehaviour
         {
             collision.gameObject.GetComponent<PlayerBehaviour>().isOnWater = true;
             var velo = collision.gameObject.GetComponent<Rigidbody2D>().velocity;
-            velo.y = 0;
+            velo.y = 0f;
             collision.gameObject.GetComponent<Rigidbody2D>().velocity = velo;
         }
     }
