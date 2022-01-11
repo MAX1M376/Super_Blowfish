@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(CapsuleCollider2D))]
@@ -10,7 +11,6 @@ public class PlayerBehaviour : MonoBehaviour
     private float lastJump;
     private float horizontalVelocity;
     private Vector2 velocity;
-    private Vector2 force;
     private Quaternion rotation;
     private CapsuleCollider2D capc;
     private Rigidbody2D rb;
@@ -29,6 +29,9 @@ public class PlayerBehaviour : MonoBehaviour
     private float airResistenceOnWater = 0.01f;
 
     [Header("Movement :")]
+    [SerializeField]
+    public Vector2 force;
+
     [SerializeField]
     private float jumpForce = 10f;
 

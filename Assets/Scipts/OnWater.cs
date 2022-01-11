@@ -13,8 +13,13 @@ public class OnWater : MonoBehaviour
         if (collision.gameObject.name == gameObject.name)
         {
             collision.gameObject.GetComponent<PlayerBehaviour>().isOnWater = true;
+
+            var force = collision.gameObject.GetComponent<PlayerBehaviour>().force;
+            force.y = -3f;
+            collision.gameObject.GetComponent<PlayerBehaviour>().force = force;
+
             var velo = collision.gameObject.GetComponent<Rigidbody2D>().velocity;
-            velo.y = 0f;
+            velo.y = -3f;
             collision.gameObject.GetComponent<Rigidbody2D>().velocity = velo;
         }
     }
