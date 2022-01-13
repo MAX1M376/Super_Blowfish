@@ -4,7 +4,7 @@ using System.Linq;
 using Unity.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(CapsuleCollider2D))]
+[RequireComponent(typeof(CircleCollider2D))]
 [RequireComponent (typeof(Rigidbody2D))]
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class PlayerBehaviour : MonoBehaviour
     private float horizontalVelocity;
     private Vector2 velocity;
     private Quaternion rotation;
-    private CapsuleCollider2D capc;
+    private CircleCollider2D cipc;
     private Rigidbody2D rb;
 
     [Header("Physique :")]
@@ -29,7 +29,7 @@ public class PlayerBehaviour : MonoBehaviour
     private float airResistenceOnWater = 0.01f;
 
     [Header("Movement :")]
-    [SerializeField]
+    [HideInInspector]
     public Vector2 force;
 
     [SerializeField]
@@ -55,6 +55,10 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField]
     private float rotationSpeed;
 
+    [Header("Property :")]
+    [SerializeField]
+    private bool freeze = false;
+
     [Header("Map :")]
     [SerializeField]
     private string mapName;
@@ -66,15 +70,32 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Start()
     {
-        capc = GetComponent<CapsuleCollider2D>();
+        cipc = GetComponent<CircleCollider2D>();
         rb = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
     {
+        if (freeze)
+        {
+            horizontalVelocity = 0f;
+            velocity = Vector2.zero;
+            force = Vector2.zero;
+            return;
+        }
+
+        // Tourne le sprite dans le direction
+        var angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+        var orientation = angle >= -90f && angle <= 90f ? 180f : 0f;
+        rotation = Quaternion.Euler(new Vector3(orientation, 0f, (orientation == 180f ? -angle : angle) + 180f));
+        var euler = transform.GetChild(0).transform.localEulerAngles;
+        euler.x = rotation.x;
+        transform.GetChild(0).transform.localEulerAngles = euler;
+
+        Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce);
+
         // Collision avec le sols
-        RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, Vector2.down, (capc.size.y / 2f) + offsetGroundDistance);
-        
+        RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, Vector2.down, cipc.radius / 2f + offsetGroundDistance);
         if (!downHits.Any(x => x.collider.gameObject.name == mapName)) // Si pas de collision alors
         {
             // Appliquation gravité
@@ -89,31 +110,21 @@ public class PlayerBehaviour : MonoBehaviour
                 rb.velocity = velo;
                 lastJump = 0f;
             }
-            rotation = Quaternion.Euler(0, 0, 0);
         }
 
-        Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce);
-
         // Collision avec le plafond
-        RaycastHit2D[] upHits = Physics2D.RaycastAll(transform.position, Vector2.up, (capc.size.y / 2f) + offsetGroundDistance);
+        RaycastHit2D[] upHits = Physics2D.RaycastAll(transform.position, Vector2.up, cipc.radius / 2f + offsetGroundDistance);
         if (upHits.Any(x => x.collider.gameObject.name == mapName)) // Si collision avec le plafond
         {
             // Annulation des forces vertical
             force.y = -1f;
         }
-
-        // Tourne le sprite dans le direction
-        var angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
-        var orientation = angle >= -90f && angle <= 90f ? 0f : 180f;
-        rotation = Quaternion.Euler(new Vector3(orientation, 0, orientation == 180f ? -angle : angle));
-
-        var euler = transform.GetChild(0).transform.localEulerAngles;
-        euler.y = orientation;
-        transform.GetChild(0).transform.localEulerAngles = euler;
     }
 
     private void FixedUpdate()
     {
+        if (freeze) return;
+
         // Application de la résistance de l'air
         force.x = Mathf.SmoothDamp(force.x, 0f, ref horizontalVelocity, 300f * (1 - (isOnWater ? airResistenceOnWater : airResistence)) * Time.fixedDeltaTime);
 
