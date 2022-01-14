@@ -72,6 +72,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         cipc = GetComponent<CircleCollider2D>();
         rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 0;
     }
 
     private void Update()
@@ -84,40 +85,41 @@ public class PlayerBehaviour : MonoBehaviour
             return;
         }
 
-        // Tourne le sprite dans le direction
-        var angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
-        var orientation = angle >= -90f && angle <= 90f ? 180f : 0f;
-        rotation = Quaternion.Euler(new Vector3(orientation, 0f, (orientation == 180f ? -angle : angle) + 180f));
-        var euler = transform.GetChild(0).transform.localEulerAngles;
-        euler.x = rotation.x;
-        transform.GetChild(0).transform.localEulerAngles = euler;
-
         Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce);
 
         // Collision avec le sols
-        RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, Vector2.down, cipc.radius / 2f + offsetGroundDistance);
-        if (!downHits.Any(x => x.collider.gameObject.name == mapName)) // Si pas de collision alors
+        RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, Vector2.down, offsetGroundDistance);
+        var angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+        var orientation = angle >= -90f && angle <= 90f ? 180f : 0f;
+        var euler = transform.GetChild(0).transform.localEulerAngles;
+        if (!downHits.Any(x => x)) // Si pas de collision alors
         {
             // Appliquation gravité
             force.y -= (isOnWater ? gravityForceOnWater : gravityForce) * Time.deltaTime;
+
+            // Tourne le sprite dans le direction
+            rotation = Quaternion.Euler(new Vector3(orientation, 0f, (orientation == 180f ? -angle : angle) + 180f));
+            euler.x = rotation.x;
+            transform.GetChild(0).transform.localEulerAngles = euler;
         }
         else
         {
-            if (Time.time - lastJump >= timeBetweenJump) // Si le personnage touche le sol et ne peut pas sauté
-            {
-                var velo = rb.velocity;
-                velo.y = 0f;
-                rb.velocity = velo;
-                lastJump = 0f;
-            }
+            rotation = Quaternion.Euler(new Vector3(orientation, 0f, orientation));
+            euler.x = rotation.x;
+            transform.GetChild(0).transform.localEulerAngles = euler;
         }
 
         // Collision avec le plafond
         RaycastHit2D[] upHits = Physics2D.RaycastAll(transform.position, Vector2.up, cipc.radius / 2f + offsetGroundDistance);
-        if (upHits.Any(x => x.collider.gameObject.name == mapName)) // Si collision avec le plafond
+        if (upHits.Any(x => x)) // Si collision avec le plafond
         {
             // Annulation des forces vertical
             force.y = -1f;
+        }
+
+        if ((Mathf.Abs(rb.velocity.x) * 1000) <= 1 && (Mathf.Abs(rb.velocity.y) * 1000) <= 1)
+        {
+            rb.velocity = Vector2.zero;
         }
     }
 
