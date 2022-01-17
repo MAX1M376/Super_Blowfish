@@ -33,10 +33,19 @@ public class InflateDeflate : MonoBehaviour
     private float lowRadius;
 
     [SerializeField]
+    private Vector2 lowOffset;
+
+    [SerializeField]
     private float mediumRadius;
 
     [SerializeField]
+    private Vector2 mediumOffset;
+
+    [SerializeField]
     private float highRadius;
+
+    [SerializeField]
+    private Vector2 highOffset;
 
     void Update()
     {
@@ -49,6 +58,7 @@ public class InflateDeflate : MonoBehaviour
             scaleY = InflateLevel / (1f / 3f) * (maxScaleY - 1f) + 1f;
             body.sprite = deflateBody;
             circ.radius = lowRadius;
+            circ.offset = lowOffset;
         }
 
         // Second tier
@@ -57,6 +67,7 @@ public class InflateDeflate : MonoBehaviour
             scaleY = (InflateLevel - 1f / 3f) / (1f / 3f) * (maxScaleY - 1f) + 0.9f;
             body.sprite = normalBody;
             circ.radius = mediumRadius;
+            circ.offset = mediumOffset;
         }
 
         // Dernier tier
@@ -65,6 +76,7 @@ public class InflateDeflate : MonoBehaviour
             scaleY = (InflateLevel - 2f / 3f) / (1f / 3f) * (maxScaleY - 1f) + 0.8f;
             body.sprite = inflateBody;
             circ.radius = highRadius;
+            circ.offset = highOffset;
         }
 
         // Application du résultat

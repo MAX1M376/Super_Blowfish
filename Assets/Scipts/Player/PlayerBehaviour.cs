@@ -9,6 +9,7 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
     private float lastJump;
+    private float lookDirection;
     private float horizontalVelocity;
     private Vector2 velocity;
     private Quaternion rotation;
@@ -66,7 +67,21 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField]
     private float offsetGroundDistance = 0.02f;
 
+    [Header("Water :")]
     public bool isOnWater = false;
+
+    [SerializeField]
+    private float inflatePerSecond = 10.0f;
+
+    [SerializeField]
+    private float deflatePerSecond = 2.0f;
+
+    [Header("Body :")]
+    [SerializeField]
+    private InflateDeflate body;
+
+    [SerializeField]
+    private float downRadius;
 
     private void Start()
     {
@@ -80,47 +95,67 @@ public class PlayerBehaviour : MonoBehaviour
         if (freeze)
         {
             horizontalVelocity = 0f;
-            velocity = Vector2.zero;
-            force = Vector2.zero;
+            rb.velocity = force = velocity = Vector2.zero;
             return;
         }
 
-        Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce);
+        if (Mathf.Abs(rb.velocity.x) <= 0.01) rb.velocity = new Vector2(0, rb.velocity.y);
+        if (Mathf.Abs(rb.velocity.y) <= 0.01) rb.velocity = new Vector2(rb.velocity.x, 0);
 
         // Collision avec le sols
-        RaycastHit2D[] downHits = Physics2D.RaycastAll(transform.position, Vector2.down, offsetGroundDistance);
-        var angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
-        var orientation = angle >= -90f && angle <= 90f ? 180f : 0f;
-        var euler = transform.GetChild(0).transform.localEulerAngles;
+        var downHits = Physics2D.OverlapCircleAll(transform.position - Vector3.up * offsetGroundDistance, cipc.radius / 2f);
+        
+        // Rotation
+        float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x);
+        int orientation = Mathf.Cos(angle) >= 0 ? 0 : 180;
+
+        var euler = transform.localEulerAngles;
+        var scale = transform.localScale;
+
+        scale.x = orientation == 180f ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        //transform.localScale = scale;
+
         if (!downHits.Any(x => x)) // Si pas de collision alors
         {
             // Appliquation gravité
             force.y -= (isOnWater ? gravityForceOnWater : gravityForce) * Time.deltaTime;
 
             // Tourne le sprite dans le direction
-            rotation = Quaternion.Euler(new Vector3(orientation, 0f, (orientation == 180f ? -angle : angle) + 180f));
-            euler.x = rotation.x;
-            transform.GetChild(0).transform.localEulerAngles = euler;
+            rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg + orientation);
+            lookDirection = orientation;
         }
         else
         {
-            rotation = Quaternion.Euler(new Vector3(orientation, 0f, orientation));
-            euler.x = rotation.x;
-            transform.GetChild(0).transform.localEulerAngles = euler;
+            rotation = Quaternion.Euler(0, lookDirection, 0);
         }
 
         // Collision avec le plafond
-        RaycastHit2D[] upHits = Physics2D.RaycastAll(transform.position, Vector2.up, cipc.radius / 2f + offsetGroundDistance);
-        if (upHits.Any(x => x)) // Si collision avec le plafond
+        var upHits = Physics2D.RaycastAll(transform.position, Vector2.up, cipc.radius / 2f + offsetGroundDistance);
+        if (upHits.Any(x => x))
         {
-            // Annulation des forces vertical
-            force.y = -1f;
+            force.y = velocity.y = 0f;
         }
 
-        if (Mathf.Abs(rb.velocity.x) <= 0.0001 && Mathf.Abs(rb.velocity.y) <= 0.0001)
+        // Collision a gauche
+        var leftHits = Physics2D.RaycastAll(transform.position, Vector2.left, cipc.radius / 2f + offsetGroundDistance);
+        if (leftHits.Any(x => x))
         {
-            rb.velocity = Vector2.zero;
+            force.x = velocity.x = horizontalVelocity = 0f;
         }
+
+        // Collision a droite
+        var rightHits = Physics2D.RaycastAll(transform.position, Vector2.right, cipc.radius / 2f + offsetGroundDistance);
+        if (rightHits.Any(x => x))
+        {
+            horizontalVelocity = force.x = velocity.x = 0f;
+        }
+
+        // Mouvement du joueur
+        Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce);
+
+
+        // Degonflement ou regonflement
+        Inflate(isOnWater);
     }
 
     private void FixedUpdate()
@@ -134,7 +169,7 @@ public class PlayerBehaviour : MonoBehaviour
         rb.velocity = Vector2.SmoothDamp(rb.velocity, force, ref velocity, Time.fixedDeltaTime);
 
         // Application de la rotation du sprite en fnction de la direction
-        transform.GetChild(0).transform.localRotation = Quaternion.Slerp(transform.GetChild(0).transform.localRotation, rotation, Time.fixedDeltaTime * rotationSpeed);
+        transform.localRotation = Quaternion.Slerp(transform.localRotation, rotation, Time.fixedDeltaTime * rotationSpeed);
     }
 
     private void Movement(float timeJump, float forceJump)
@@ -160,5 +195,19 @@ public class PlayerBehaviour : MonoBehaviour
         {
             lastJump = 0f;
         }
+    }
+
+    private void Inflate(bool water)
+    {
+        float inflate;
+        if (water)
+        {
+            inflate = body.InflateLevel + Time.deltaTime * (inflatePerSecond / 100);
+        }
+        else
+        {
+            inflate = body.InflateLevel - Time.deltaTime * (deflatePerSecond / 100);
+        }
+        body.InflateLevel = Mathf.Clamp(inflate, 0f, 1f);
     }
 }

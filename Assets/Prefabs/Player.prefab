@@ -430,8 +430,11 @@ MonoBehaviour:
   inflateBody: {fileID: 21300000, guid: 09eca74b0bee35e4e95dff2c2158c251, type: 3}
   circ: {fileID: 8113528471265466913}
   lowRadius: 0.35
+  lowOffset: {x: 0, y: 0}
   mediumRadius: 0.5
-  highRadius: 0.65
+  mediumOffset: {x: 0.05, y: 0.12}
+  highRadius: 0.7
+  highOffset: {x: 0.17, y: 0.15}
 --- !u!1 &5963992914590408511
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,11 +614,15 @@ MonoBehaviour:
   timeBetweenJumpOnWater: 0.3
   distancePowerfullJump: 1.8
   jumpMaxForce: 1.5
-  rotationSpeed: 20
+  rotationSpeed: 5
   freeze: 0
   mapName: Map
-  offsetGroundDistance: 0.37
+  offsetGroundDistance: 0.08
   isOnWater: 0
+  inflatePerSecond: 20
+  deflatePerSecond: 2
+  body: {fileID: 0}
+  downRadius: 0
 --- !u!1 &6095073900159459357
 GameObject:
   m_ObjectHideFlags: 0
