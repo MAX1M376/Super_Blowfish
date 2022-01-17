@@ -602,7 +602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravityForce: 9
   airResistence: 0.92
-  gravityForceOnWater: 3
+  gravityForceOnWater: 1
   airResistenceOnWater: 0.94
   force: {x: 0, y: 0}
   jumpForce: 4

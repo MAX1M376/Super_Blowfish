@@ -117,7 +117,7 @@ public class PlayerBehaviour : MonoBehaviour
             force.y = -1f;
         }
 
-        if ((Mathf.Abs(rb.velocity.x) * 1000) <= 1 && (Mathf.Abs(rb.velocity.y) * 1000) <= 1)
+        if (Mathf.Abs(rb.velocity.x) <= 0.0001 && Mathf.Abs(rb.velocity.y) <= 0.0001)
         {
             rb.velocity = Vector2.zero;
         }

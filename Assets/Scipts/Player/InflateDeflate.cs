@@ -5,7 +5,6 @@ using UnityEngine;
 public class InflateDeflate : MonoBehaviour
 {
     private float maxScaleY = 1.15f;
-    private PlayerBehaviour playerBehaviour;
 
     [Header("Property")]
     [Range(0f, 1f)]
@@ -39,11 +38,6 @@ public class InflateDeflate : MonoBehaviour
     [SerializeField]
     private float highRadius;
 
-    private void Start()
-    {
-        playerBehaviour = gameObject.transform.parent.parent.GetComponent<PlayerBehaviour>();
-    }
-
     void Update()
     {
         // Résultat
@@ -60,7 +54,7 @@ public class InflateDeflate : MonoBehaviour
         // Second tier
         if (InflateLevel >= (1f / 3f) && InflateLevel < (2f / 3f))
         {
-            scaleY = (InflateLevel - 1f / 3f) / (1f / 3f) * (maxScaleY - 1f) + 1f;
+            scaleY = (InflateLevel - 1f / 3f) / (1f / 3f) * (maxScaleY - 1f) + 0.9f;
             body.sprite = normalBody;
             circ.radius = mediumRadius;
         }
@@ -68,7 +62,7 @@ public class InflateDeflate : MonoBehaviour
         // Dernier tier
         if (InflateLevel >= (2f / 3f))
         {
-            scaleY = (InflateLevel - 2f / 3f) / (1f / 3f) * (maxScaleY - 1f) + 1f;
+            scaleY = (InflateLevel - 2f / 3f) / (1f / 3f) * (maxScaleY - 1f) + 0.8f;
             body.sprite = inflateBody;
             circ.radius = highRadius;
         }
