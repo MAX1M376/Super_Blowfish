@@ -9,7 +9,7 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
     private float lastJump;
-    private float lookDirection;
+    private float lookDirection = 0f;
     private float horizontalVelocity;
     private Vector2 velocity;
     private Quaternion rotation;
@@ -17,71 +17,38 @@ public class PlayerBehaviour : MonoBehaviour
     private Rigidbody2D rb;
 
     [Header("Physique :")]
-    [SerializeField]
-    private float gravityForce = 14f;
-
-    [SerializeField]
-    private float airResistence = 0.01f;
-
-    [SerializeField]
-    private float gravityForceOnWater = 14f;
-
-    [SerializeField]
-    private float airResistenceOnWater = 0.01f;
+    [SerializeField] private float gravityForce = 14f;
+    [SerializeField] private float airResistence = 0.01f;
+    [SerializeField] private float gravityForceOnWater = 14f;
+    [SerializeField] private float airResistenceOnWater = 0.01f;
 
     [Header("Movement :")]
-    [HideInInspector]
-    public Vector2 force;
-
-    [SerializeField]
-    private float jumpForce = 10f;
-
-    [SerializeField]
-    private float timeBetweenJump = 0.5f;
-
-    [SerializeField]
-    private float jumpForceOnWater = 10f;
-
-    [SerializeField]
-    private float timeBetweenJumpOnWater = 0.5f;
-
-    [SerializeField]
-    [Range(0.1f, 3f)]
-    private float distancePowerfullJump = 1.5f;
-
-    [SerializeField]
-    [Range(1f, 5f)]
-    private float jumpMaxForce = 1.2f;
-
-    [SerializeField]
-    private float rotationSpeed;
+    [HideInInspector] public Vector2 force;
+    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float timeBetweenJump = 0.5f;
+    [SerializeField] private float jumpForceOnWater = 10f;
+    [SerializeField] private float timeBetweenJumpOnWater = 0.5f;
+    [SerializeField, Range(0.1f, 3f)] private float distancePowerfullJump = 1.5f;
+    [SerializeField, Range(1f, 5f)] private float jumpMaxForce = 1.2f;
+    [SerializeField] private float rotationSpeed;
 
     [Header("Property :")]
-    [SerializeField]
-    private bool freeze = false;
+    [SerializeField]private bool freeze = false;
 
     [Header("Map :")]
-    [SerializeField]
-    private string mapName;
+    [SerializeField] private string mapName;
+    [SerializeField] private float offsetGroundDistance = 0.02f;
 
-    [SerializeField]
-    private float offsetGroundDistance = 0.02f;
-
-    [Header("Water :")]
-    public bool isOnWater = false;
-
-    [SerializeField]
-    private float inflatePerSecond = 10.0f;
-
-    [SerializeField]
-    private float deflatePerSecond = 2.0f;
+    [Header("Water :")] public bool isOnWater = false;
+    [SerializeField] private float inflatePerSecond = 10.0f;
+    [SerializeField] private float deflatePerSecond = 2.0f;
 
     [Header("Body :")]
-    [SerializeField]
-    private InflateDeflate body;
+    [SerializeField] private InflateDeflate body;
+    [SerializeField] private float downRadius;
 
-    [SerializeField]
-    private float downRadius;
+    [Header("Crates :")]
+    [SerializeField] private GameObject crate;
 
     private void Start()
     {
@@ -103,7 +70,6 @@ public class PlayerBehaviour : MonoBehaviour
         if (Mathf.Abs(rb.velocity.y) <= 0.01) rb.velocity = new Vector2(rb.velocity.x, 0);
 
         // Collision avec le sols
-        var downHits = Physics2D.OverlapCircleAll(transform.position - Vector3.up * offsetGroundDistance, cipc.radius / 2f);
         
         // Rotation
         float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x);
@@ -115,7 +81,18 @@ public class PlayerBehaviour : MonoBehaviour
         scale.x = orientation == 180f ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
         //transform.localScale = scale;
 
-        if (!downHits.Any(x => x)) // Si pas de collision alors
+        // Collision avec le sol
+        var downHits = Physics2D.OverlapCircleAll(transform.position - Vector3.up * offsetGroundDistance, cipc.radius / 2f);
+        if (downHits.Any(x => x))
+        {
+            rotation = Quaternion.Euler(0, lookDirection, 0);
+            if (downHits.Any(x => x.gameObject.name == crate.name))
+            {
+                force.y = 5.0f;
+                Debug.Log("Hit crate !");
+            }
+        }
+        else
         {
             // Appliquation gravité
             force.y -= (isOnWater ? gravityForceOnWater : gravityForce) * Time.deltaTime;
@@ -124,35 +101,42 @@ public class PlayerBehaviour : MonoBehaviour
             rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg + orientation);
             lookDirection = orientation;
         }
-        else
-        {
-            rotation = Quaternion.Euler(0, lookDirection, 0);
-        }
 
         // Collision avec le plafond
         var upHits = Physics2D.RaycastAll(transform.position, Vector2.up, cipc.radius / 2f + offsetGroundDistance);
         if (upHits.Any(x => x))
         {
-            force.y = velocity.y = 0f;
+            force.y = velocity.y = -0.5f;
+            if (upHits.Any(x => x.collider.gameObject.name == crate.name))
+            {
+                force.y = -1.0f;
+            }
         }
 
         // Collision a gauche
         var leftHits = Physics2D.RaycastAll(transform.position, Vector2.left, cipc.radius / 2f + offsetGroundDistance);
         if (leftHits.Any(x => x))
         {
-            force.x = velocity.x = horizontalVelocity = 0f;
+            force.x = velocity.x = horizontalVelocity = 0.1f;
+            if (leftHits.Any(x => x.collider.gameObject.name == crate.name))
+            {
+                force.x = 3.0f;
+            }
         }
 
         // Collision a droite
         var rightHits = Physics2D.RaycastAll(transform.position, Vector2.right, cipc.radius / 2f + offsetGroundDistance);
         if (rightHits.Any(x => x))
         {
-            horizontalVelocity = force.x = velocity.x = 0f;
+            horizontalVelocity = force.x = velocity.x = -0.1f;
+            if (rightHits.Any(x => x.collider.gameObject.name == crate.name))
+            {
+                force.x = -3.0f;
+            }
         }
 
         // Mouvement du joueur
         Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce);
-
 
         // Degonflement ou regonflement
         Inflate(isOnWater);
