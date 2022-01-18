@@ -78,13 +78,13 @@ public class PlayerBehaviour : MonoBehaviour
         var scale = transform.localScale;
 
         scale.x = orientation == 180f ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
-        //transform.localScale = scale;
+        transform.localScale = scale;
 
         // Collision avec le sol
         var downHits = Physics2D.OverlapCircleAll(transform.position - Vector3.up * offsetGroundDistance, cipc.radius / 2f);
         if (downHits.Any(x => x))
         {
-            rotation = Quaternion.Euler(0, lookDirection, 0);
+            //rotation = Quaternion.Euler(0, lookDirection, 0);
             if (downHits.Any(x => x.gameObject.tag == crateTag))
             {
                 force.y = 5.0f;
