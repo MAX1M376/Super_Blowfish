@@ -45,10 +45,9 @@ public class PlayerBehaviour : MonoBehaviour
 
     [Header("Body :")]
     [SerializeField] private InflateDeflate body;
-    [SerializeField] private float downRadius;
 
     [Header("Crates :")]
-    [SerializeField] private GameObject crate;
+    [SerializeField] private string crateTag;
 
     private void Start()
     {
@@ -86,10 +85,10 @@ public class PlayerBehaviour : MonoBehaviour
         if (downHits.Any(x => x))
         {
             rotation = Quaternion.Euler(0, lookDirection, 0);
-            if (downHits.Any(x => x.gameObject.name == crate.name))
+            if (downHits.Any(x => x.gameObject.tag == crateTag))
             {
                 force.y = 5.0f;
-                Debug.Log("Hit crate !");
+                downHits.ToList().Where(x => x.gameObject.tag == crateTag).ToList().ForEach(x => x.gameObject.GetComponent<CrateBehaviour>().Hit(1));
             }
         }
         else
@@ -107,9 +106,10 @@ public class PlayerBehaviour : MonoBehaviour
         if (upHits.Any(x => x))
         {
             force.y = velocity.y = -0.5f;
-            if (upHits.Any(x => x.collider.gameObject.name == crate.name))
+            if (upHits.Any(x => x.collider.gameObject.tag == crateTag))
             {
                 force.y = -1.0f;
+                upHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
             }
         }
 
@@ -118,9 +118,10 @@ public class PlayerBehaviour : MonoBehaviour
         if (leftHits.Any(x => x))
         {
             force.x = velocity.x = horizontalVelocity = 0.1f;
-            if (leftHits.Any(x => x.collider.gameObject.name == crate.name))
+            if (leftHits.Any(x => x.collider.gameObject.tag == crateTag))
             {
                 force.x = 3.0f;
+                leftHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
             }
         }
 
@@ -129,9 +130,10 @@ public class PlayerBehaviour : MonoBehaviour
         if (rightHits.Any(x => x))
         {
             horizontalVelocity = force.x = velocity.x = -0.1f;
-            if (rightHits.Any(x => x.collider.gameObject.name == crate.name))
+            if (rightHits.Any(x => x.collider.gameObject.tag == crateTag))
             {
                 force.x = -3.0f;
+                rightHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
             }
         }
 

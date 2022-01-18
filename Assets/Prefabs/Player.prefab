@@ -617,13 +617,12 @@ MonoBehaviour:
   rotationSpeed: 5
   freeze: 0
   mapName: Map
-  offsetGroundDistance: 0.08
+  offsetGroundDistance: 0.05
   isOnWater: 0
   inflatePerSecond: 20
   deflatePerSecond: 2
   body: {fileID: 1682405063009855337}
-  downRadius: 0
-  crate: {fileID: 8646258327145269071, guid: 2014a51388312f24cb56b13baf4db0e0, type: 3}
+  crateTag: Crates
 --- !u!1 &6095073900159459357
 GameObject:
   m_ObjectHideFlags: 0
