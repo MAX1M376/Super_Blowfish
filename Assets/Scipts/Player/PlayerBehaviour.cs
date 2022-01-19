@@ -33,7 +33,9 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private float rotationSpeed;
 
     [Header("Property :")]
-    [SerializeField]private bool freeze = false;
+    [SerializeField] private bool freeze = false;
+    [SerializeField] private bool newSystem = false;
+    [SerializeField] private Vector2 myDirection;
 
     [Header("Map :")]
     [SerializeField] private string mapName;
@@ -78,7 +80,7 @@ public class PlayerBehaviour : MonoBehaviour
         var scale = transform.localScale;
 
         scale.x = orientation == 180f ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
-        transform.localScale = scale;
+        //transform.localScale = scale;
 
         // Collision avec le sol
         var downHits = Physics2D.OverlapCircleAll(transform.position - Vector3.up * offsetGroundDistance, cipc.radius / 2f);
@@ -87,7 +89,7 @@ public class PlayerBehaviour : MonoBehaviour
             //rotation = Quaternion.Euler(0, lookDirection, 0);
             if (downHits.Any(x => x.gameObject.tag == crateTag))
             {
-                force.y = 5.0f;
+                force.y = (isOnWater ? jumpForceOnWater : jumpForce) / 1.5f;
                 downHits.ToList().Where(x => x.gameObject.tag == crateTag).ToList().ForEach(x => x.gameObject.GetComponent<CrateBehaviour>().Hit(1));
             }
         }
@@ -108,7 +110,7 @@ public class PlayerBehaviour : MonoBehaviour
             force.y = velocity.y = -0.5f;
             if (upHits.Any(x => x.collider.gameObject.tag == crateTag))
             {
-                force.y = -1.0f;
+                force.y = (isOnWater ? jumpForceOnWater : jumpForce) / -3;
                 upHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
             }
         }
@@ -120,7 +122,7 @@ public class PlayerBehaviour : MonoBehaviour
             force.x = velocity.x = horizontalVelocity = 0.1f;
             if (leftHits.Any(x => x.collider.gameObject.tag == crateTag))
             {
-                force.x = 3.0f;
+                force.x = (isOnWater ? jumpForceOnWater : jumpForce) / 2;
                 leftHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
             }
         }
@@ -132,7 +134,7 @@ public class PlayerBehaviour : MonoBehaviour
             horizontalVelocity = force.x = velocity.x = -0.1f;
             if (rightHits.Any(x => x.collider.gameObject.tag == crateTag))
             {
-                force.x = -3.0f;
+                force.x = (isOnWater ? jumpForceOnWater : jumpForce) / -2;
                 rightHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
             }
         }
@@ -163,13 +165,31 @@ public class PlayerBehaviour : MonoBehaviour
         // Les inputs
         if (Input.touchCount == 1 && Time.time - lastJump >= timeJump)
         {
-            // Recupération de la position du touché
-            var mousePos2D = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-            var pos2D = new Vector2(transform.position.x, transform.position.y);
+            Vector2 direction;
+            float jump;
 
-            // Calcul de la direction et de la force du saut
-            var direction = (mousePos2D - pos2D).normalized;
-            var jump = Vector2.Distance(mousePos2D, pos2D) >= distancePowerfullJump ? (forceJump * jumpMaxForce) : forceJump;
+            if (newSystem)
+            {
+                // Recupération de la position du touché
+                var mousePos2D = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
+                var pos2D = new Vector2(transform.position.x, transform.position.y);
+                var offsetMousePos = mousePos2D - pos2D;
+                myDirection.Normalize();
+
+                direction = new Vector2(offsetMousePos.x < 0 ? -Mathf.Abs(myDirection.x) : Mathf.Abs(myDirection.x), myDirection.y);
+                jump = Mathf.Abs((mousePos2D - pos2D).x) >= distancePowerfullJump ? (forceJump * jumpMaxForce) : forceJump;
+            }
+            else
+            {
+                // Recupération de la position du touché
+                var mousePos2D = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
+                var pos2D = new Vector2(transform.position.x, transform.position.y);
+
+                // Calcul de la direction et de la force du saut
+                direction = (mousePos2D - pos2D).normalized;
+                jump = Vector2.Distance(mousePos2D, pos2D) >= distancePowerfullJump ? (forceJump * jumpMaxForce) : forceJump;
+
+            }
 
             // Application des force et reset du jump time
             force = direction * jump;
@@ -195,5 +215,10 @@ public class PlayerBehaviour : MonoBehaviour
             inflate = body.InflateLevel - Time.deltaTime * (deflatePerSecond / 100);
         }
         body.InflateLevel = Mathf.Clamp(inflate, 0f, 1f);
+    }
+
+    public void SwitchSystem()
+    {
+        newSystem = !newSystem;
     }
 }

@@ -616,8 +616,10 @@ MonoBehaviour:
   jumpMaxForce: 1.5
   rotationSpeed: 5
   freeze: 0
+  newSystem: 1
+  myDirection: {x: 2, y: 1}
   mapName: Map
-  offsetGroundDistance: 0.05
+  offsetGroundDistance: 0.08
   isOnWater: 0
   inflatePerSecond: 20
   deflatePerSecond: 2
