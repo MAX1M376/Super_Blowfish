@@ -11,15 +11,14 @@ public class SpriteStretch : MonoBehaviour
     void Start()
     {
         offset = transform.position - Camera.main.transform.position;
-
-        var topRightCorner = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
-        var worldSpaceWidth = topRightCorner.x * 2;
-        var worldSpaceHeight = topRightCorner.y * 2;
-
+        
+        var screenWorldWidth = Camera.main.ScreenToWorldPoint(Vector3.right * Screen.width).x - Camera.main.ScreenToWorldPoint(Vector3.zero).x;
+        var screenWorldHeight = Camera.main.ScreenToWorldPoint(Vector3.down * Screen.height).y - Camera.main.ScreenToWorldPoint(Vector3.zero).y;
+       
         var spriteSize = gameObject.GetComponent<SpriteRenderer>().bounds.size;
 
-        var scaleFactorX = worldSpaceWidth / spriteSize.x;
-        var scaleFactorY = worldSpaceHeight / spriteSize.y;
+        var scaleFactorX = Mathf.Abs(screenWorldWidth / spriteSize.x);
+        var scaleFactorY = Mathf.Abs(screenWorldHeight / spriteSize.y);
 
         if (KeepAspectRatio)
         {

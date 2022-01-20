@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CircleCollider2D))]
 [RequireComponent (typeof(Rigidbody2D))]
@@ -44,6 +45,7 @@ public class PlayerBehaviour : MonoBehaviour
     [Header("Water :")] public bool isOnWater = false;
     [SerializeField] private float inflatePerSecond = 10.0f;
     [SerializeField] private float deflatePerSecond = 2.0f;
+    [SerializeField] private Slider airBar; 
 
     [Header("Body :")]
     [SerializeField] private InflateDeflate body;
@@ -137,8 +139,6 @@ public class PlayerBehaviour : MonoBehaviour
             }
         }
 
-        Debug.Log(force);
-
         // Mouvement du joueur
         Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce);
 
@@ -216,6 +216,6 @@ public class PlayerBehaviour : MonoBehaviour
         {
             inflate = body.InflateLevel - Time.deltaTime * (deflatePerSecond / 100);
         }
-        body.InflateLevel = Mathf.Clamp(inflate, 0f, 1f);
+        airBar.value = body.InflateLevel = Mathf.Clamp(inflate, 0f, 1f);
     }
 }
