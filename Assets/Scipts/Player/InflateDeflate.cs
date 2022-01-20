@@ -7,45 +7,24 @@ public class InflateDeflate : MonoBehaviour
     private float maxScaleY = 1.15f;
 
     [Header("Property")]
-    [Range(0f, 1f)]
-    [SerializeField]
-    public float InflateLevel = 1f;
+    [SerializeField, Range(0f, 1f)] public float InflateLevel = 1f;
 
     [Header("Sprite Render :")]
-    [SerializeField]
-    private SpriteRenderer body;
+    [SerializeField] private SpriteRenderer body;
 
     [Header("Sprites :")]
-    [SerializeField]
-    private Sprite deflateBody;
-
-    [SerializeField]
-    private Sprite normalBody;
-
-    [SerializeField]
-    private Sprite inflateBody;
+    [SerializeField] private Sprite deflateBody;
+    [SerializeField] private Sprite normalBody;
+    [SerializeField] private Sprite inflateBody;
 
     [Header("Collider :")]
-    [SerializeField]
-    private CircleCollider2D circ;
-
-    [SerializeField]
-    private float lowRadius;
-
-    [SerializeField]
-    private Vector2 lowOffset;
-
-    [SerializeField]
-    private float mediumRadius;
-
-    [SerializeField]
-    private Vector2 mediumOffset;
-
-    [SerializeField]
-    private float highRadius;
-
-    [SerializeField]
-    private Vector2 highOffset;
+    [SerializeField] private CircleCollider2D circ;
+    [SerializeField] private float lowRadius;
+    [SerializeField] private Vector2 lowOffset;
+    [SerializeField] private float mediumRadius;
+    [SerializeField] private Vector2 mediumOffset;
+    [SerializeField] private float highRadius;
+    [SerializeField] private Vector2 highOffset;
 
     void Update()
     {
@@ -58,7 +37,7 @@ public class InflateDeflate : MonoBehaviour
             scaleY = InflateLevel / (1f / 3f) * (maxScaleY - 1f) + 1f;
             body.sprite = deflateBody;
             circ.radius = lowRadius;
-            circ.offset = lowOffset;
+            transform.parent.transform.localPosition = new Vector2(transform.parent.transform.localEulerAngles.y == 0 ? -lowOffset.x : lowOffset.x, -lowOffset.y);
         }
 
         // Second tier
@@ -67,7 +46,7 @@ public class InflateDeflate : MonoBehaviour
             scaleY = (InflateLevel - 1f / 3f) / (1f / 3f) * (maxScaleY - 1f) + 0.9f;
             body.sprite = normalBody;
             circ.radius = mediumRadius;
-            circ.offset = mediumOffset;
+            transform.parent.transform.localPosition = new Vector2(transform.parent.transform.localEulerAngles.y == 0 ? -mediumOffset.x : mediumOffset.x, -mediumOffset.y);
         }
 
         // Dernier tier
@@ -76,7 +55,7 @@ public class InflateDeflate : MonoBehaviour
             scaleY = (InflateLevel - 2f / 3f) / (1f / 3f) * (maxScaleY - 1f) + 0.8f;
             body.sprite = inflateBody;
             circ.radius = highRadius;
-            circ.offset = highOffset;
+            transform.parent.transform.localPosition = new Vector2(transform.parent.transform.localEulerAngles.y == 0 ? -highOffset.x : highOffset.x, -highOffset.y);
         }
 
         // Application du résultat

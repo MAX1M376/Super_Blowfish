@@ -423,7 +423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7339df6bb29932a459c7c6afc1a4b269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InflateLevel: 0
+  InflateLevel: 1
   body: {fileID: 3411949293164249940}
   deflateBody: {fileID: 21300000, guid: bb3705ac85fc50244aa1ebcb47f38e18, type: 3}
   normalBody: {fileID: 21300000, guid: 58c964c61867dc8448c7df283d132ce5, type: 3}
@@ -569,7 +569,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.35
+  m_Radius: 0.7
 --- !u!50 &6053095698510454284
 Rigidbody2D:
   serializedVersion: 4
@@ -616,10 +616,10 @@ MonoBehaviour:
   jumpMaxForce: 1.5
   rotationSpeed: 5
   freeze: 0
-  newSystem: 1
+  newSystem: 0
   myDirection: {x: 2, y: 1}
   mapName: Map
-  offsetGroundDistance: 0.08
+  offsetGroundDistance: 0.07
   isOnWater: 0
   inflatePerSecond: 20
   deflatePerSecond: 2

@@ -67,26 +67,25 @@ public class PlayerBehaviour : MonoBehaviour
             return;
         }
 
+        // 0 when arround 0
         if (Mathf.Abs(rb.velocity.x) <= 0.01) rb.velocity = new Vector2(0, rb.velocity.y);
         if (Mathf.Abs(rb.velocity.y) <= 0.01) rb.velocity = new Vector2(rb.velocity.x, 0);
-
-        // Collision avec le sols
         
         // Rotation
         float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x);
         int orientation = Mathf.Cos(angle) >= 0 ? 0 : 180;
-
         var euler = transform.localEulerAngles;
-        var scale = transform.localScale;
+        var eulerChild = transform.GetChild(0).transform.localEulerAngles;
 
-        scale.x = orientation == 180f ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
-        //transform.localScale = scale;
+        eulerChild.y = lookDirection;
+        transform.GetChild(0).transform.localEulerAngles = eulerChild;
 
         // Collision avec le sol
         var downHits = Physics2D.OverlapCircleAll(transform.position - Vector3.up * offsetGroundDistance, cipc.radius / 2f);
         if (downHits.Any(x => x))
         {
-            //rotation = Quaternion.Euler(0, lookDirection, 0);
+            force.y = 0f;
+            rotation.z = 0f;
             if (downHits.Any(x => x.gameObject.tag == crateTag))
             {
                 force.y = (isOnWater ? jumpForceOnWater : jumpForce) / 1.5f;
@@ -100,11 +99,10 @@ public class PlayerBehaviour : MonoBehaviour
 
             // Tourne le sprite dans le direction
             rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg + orientation);
-            lookDirection = orientation;
         }
 
         // Collision avec le plafond
-        var upHits = Physics2D.RaycastAll(transform.position, Vector2.up, cipc.radius / 2f + offsetGroundDistance);
+        var upHits = Physics2D.RaycastAll(transform.position, Vector2.up, cipc.radius / 2f + offsetGroundDistance + 0.03f);
         if (upHits.Any(x => x))
         {
             force.y = velocity.y = -0.5f;
@@ -116,7 +114,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
         // Collision a gauche
-        var leftHits = Physics2D.RaycastAll(transform.position, Vector2.left, cipc.radius / 2f + offsetGroundDistance);
+        var leftHits = Physics2D.RaycastAll(transform.position, Vector2.left, cipc.radius / 2f + offsetGroundDistance + 0.03f);
         if (leftHits.Any(x => x))
         {
             force.x = velocity.x = horizontalVelocity = 0.1f;
@@ -128,7 +126,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
         // Collision a droite
-        var rightHits = Physics2D.RaycastAll(transform.position, Vector2.right, cipc.radius / 2f + offsetGroundDistance);
+        var rightHits = Physics2D.RaycastAll(transform.position, Vector2.right, cipc.radius / 2f + offsetGroundDistance + 0.03f);
         if (rightHits.Any(x => x))
         {
             horizontalVelocity = force.x = velocity.x = -0.1f;
@@ -138,6 +136,8 @@ public class PlayerBehaviour : MonoBehaviour
                 rightHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
             }
         }
+
+        Debug.Log(force);
 
         // Mouvement du joueur
         Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce);
@@ -191,6 +191,8 @@ public class PlayerBehaviour : MonoBehaviour
 
             }
 
+            lookDirection = direction.x < 0 ? 0 : 180;
+
             // Application des force et reset du jump time
             force = direction * jump;
             lastJump = Time.time;
@@ -215,10 +217,5 @@ public class PlayerBehaviour : MonoBehaviour
             inflate = body.InflateLevel - Time.deltaTime * (deflatePerSecond / 100);
         }
         body.InflateLevel = Mathf.Clamp(inflate, 0f, 1f);
-    }
-
-    public void SwitchSystem()
-    {
-        newSystem = !newSystem;
     }
 }

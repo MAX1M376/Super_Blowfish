@@ -9,40 +9,34 @@ public class CameraBehaviour : MonoBehaviour
     private Vector3 offset;
     private float screenWorldWidth;
     private float screenWorldHeight;
-    private Vector3 topRightScreenWorld;
+    private Vector3 bottomLeftScreenWorld;
 
     [Header("Object to follow :")]
-    [SerializeField]
-    private new Transform gameObject;
+    [SerializeField] private new Transform player;
 
     [Header("Behaviour :")]
-    [Range(0f, 1f)]
-    [SerializeField]
-    private float smoothSpeed = 0.125f;
+    [SerializeField, Range(0f, 1f)] private float smoothSpeed = 0.125f;
 
     [Header("Map :")]
-    [SerializeField]
-    private Tilemap tlmap;
+    [SerializeField] private Tilemap tlmap;
+    [SerializeField] private Vector2 topLeft;
+    [SerializeField] private Vector2 bottomRight;
 
     private void Start()
     {
         cam = GetComponent<Camera>();
-        offset = transform.position - gameObject.position;
+        offset = transform.position - player.position;
         screenWorldWidth = cam.ScreenToWorldPoint(Vector3.right * cam.pixelWidth).x - cam.ScreenToWorldPoint(Vector3.zero).x;
         screenWorldHeight = cam.ScreenToWorldPoint(Vector3.down * cam.pixelHeight).y - cam.ScreenToWorldPoint(Vector3.zero).y;
-        topRightScreenWorld = cam.ScreenToWorldPoint(Vector3.zero) - transform.position;
+        bottomLeftScreenWorld = cam.ScreenToWorldPoint(Vector3.zero) - transform.position;
     }
 
     private void Update()
     {
-        var minX = (tlmap.size.x + tlmap.transform.parent.position.x) * tlmap.cellSize.x / -2f;
-        var maxX = (tlmap.size.x + tlmap.transform.parent.position.x) * tlmap.cellSize.x / 2f;
-        var minY = (tlmap.size.y + tlmap.transform.parent.position.y) * tlmap.cellSize.y / -2f;
-        var maxY = (tlmap.size.y + tlmap.transform.parent.position.y) * tlmap.cellSize.y / 2f;
-        var pos = offset + gameObject.position;
+        Vector3 pos = player.position + offset;
 
-        pos.x = Mathf.Clamp(topRightScreenWorld.x + pos.x, minX, maxX - screenWorldWidth) - topRightScreenWorld.x;
-        pos.y = Mathf.Clamp(topRightScreenWorld.y + pos.y, maxY + screenWorldHeight, minY) - topRightScreenWorld.y;
+        pos.x = Mathf.Clamp(bottomLeftScreenWorld.x + pos.x, topLeft.x, bottomRight.x - screenWorldWidth) - bottomLeftScreenWorld.x;
+        pos.y = Mathf.Clamp(bottomLeftScreenWorld.y + pos.y, bottomRight.y, topLeft.y + screenWorldHeight) - bottomLeftScreenWorld.y;
 
         transform.position = Vector3.Lerp(transform.position, pos, smoothSpeed * Time.deltaTime * 300);
     }
