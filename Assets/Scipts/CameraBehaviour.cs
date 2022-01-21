@@ -12,13 +12,12 @@ public class CameraBehaviour : MonoBehaviour
     private Vector3 bottomLeftScreenWorld;
 
     [Header("Object to follow :")]
-    [SerializeField] private new Transform player;
+    [SerializeField] private Transform player;
 
     [Header("Behaviour :")]
     [SerializeField, Range(0f, 1f)] private float smoothSpeed = 0.125f;
 
     [Header("Map :")]
-    [SerializeField] private Tilemap tlmap;
     [SerializeField] private Vector2 topLeft;
     [SerializeField] private Vector2 bottomRight;
 
