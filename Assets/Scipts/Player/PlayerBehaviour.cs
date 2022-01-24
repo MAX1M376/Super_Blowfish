@@ -9,6 +9,9 @@ using UnityEngine.UI;
 [RequireComponent (typeof(Rigidbody2D))]
 public class PlayerBehaviour : MonoBehaviour
 {
+    [HideInInspector] public Vector2 force;
+
+    private int keyboardDirection;
     private float lastJump;
     private float lookDirection = 0f;
     private float horizontalVelocity;
@@ -17,34 +20,37 @@ public class PlayerBehaviour : MonoBehaviour
     private CircleCollider2D cipc;
     private Rigidbody2D rb;
 
-    [Header("Physique :")]
+    [Header("Propety :")]
     [SerializeField] private float gravityForce = 14f;
     [SerializeField] private float airResistence = 0.01f;
-    [SerializeField] private float gravityForceOnWater = 14f;
-    [SerializeField] private float airResistenceOnWater = 0.01f;
-
-    [Header("Movement :")]
-    [HideInInspector] public Vector2 force;
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float timeBetweenJump = 0.5f;
+    [SerializeField] private Vector2 lockedDirection = new Vector2(1.0f, 1.6f);
+
+    [Header("Property On Water :")]
+    [SerializeField] private float gravityForceOnWater = 14f;
+    [SerializeField] private float airResistenceOnWater = 0.01f;
     [SerializeField] private float jumpForceOnWater = 10f;
     [SerializeField] private float timeBetweenJumpOnWater = 0.5f;
+    [SerializeField] private Vector2 lockedDirectionOnWater = new Vector2(1.0f, 0.8f);
+    [SerializeField] private float inflatePerSecond = 10.0f;
+    [SerializeField] private float deflatePerSecond = 2.0f;
+
+    [Header("Other Property :")]
     [SerializeField, Range(0.1f, 3f)] private float distancePowerfullJump = 1.5f;
     [SerializeField, Range(1f, 5f)] private float jumpMaxForce = 1.2f;
+    [SerializeField] private float offsetGroundDistance = 0.02f;
     [SerializeField] private float rotationSpeed;
-
-    [Header("Property :")]
-    [SerializeField] private bool freeze = false;
     [SerializeField] private bool newSystem = false;
-    [SerializeField] private Vector2 myDirection;
+
+    [Header("State :")]
+    [SerializeField] private bool freeze = false;
+    public bool isOnWater = false;
 
     [Header("Map :")]
     [SerializeField] private string mapName;
-    [SerializeField] private float offsetGroundDistance = 0.02f;
 
-    [Header("Water :")] public bool isOnWater = false;
-    [SerializeField] private float inflatePerSecond = 10.0f;
-    [SerializeField] private float deflatePerSecond = 2.0f;
+    [Header("UI :")]
     [SerializeField] private Slider airBar; 
 
     [Header("Body :")]
@@ -140,7 +146,7 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
         // Mouvement du joueur
-        Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce);
+        Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce, isOnWater ? lockedDirectionOnWater : lockedDirection);
 
         // Degonflement ou regonflement
         Inflate(isOnWater);
@@ -160,7 +166,7 @@ public class PlayerBehaviour : MonoBehaviour
         transform.localRotation = Quaternion.Slerp(transform.localRotation, rotation, Time.fixedDeltaTime * rotationSpeed);
     }
 
-    private void Movement(float timeJump, float forceJump)
+    private void Movement(float timeJump, float forceJump, Vector2 lockDir)
     {
         // Les inputs
         if (Input.touchCount == 1 && Time.time - lastJump >= timeJump)
@@ -168,28 +174,7 @@ public class PlayerBehaviour : MonoBehaviour
             Vector2 direction;
             float jump;
 
-            if (newSystem)
-            {
-                // Recupération de la position du touché
-                var mousePos2D = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-                var pos2D = new Vector2(transform.position.x, transform.position.y);
-                var offsetMousePos = mousePos2D - pos2D;
-                myDirection.Normalize();
-
-                direction = new Vector2(offsetMousePos.x < 0 ? -Mathf.Abs(myDirection.x) : Mathf.Abs(myDirection.x), myDirection.y);
-                jump = Mathf.Abs((mousePos2D - pos2D).x) >= distancePowerfullJump ? (forceJump * jumpMaxForce) : forceJump;
-            }
-            else
-            {
-                // Recupération de la position du touché
-                var mousePos2D = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-                var pos2D = new Vector2(transform.position.x, transform.position.y);
-
-                // Calcul de la direction et de la force du saut
-                direction = (mousePos2D - pos2D).normalized;
-                jump = Vector2.Distance(mousePos2D, pos2D) >= distancePowerfullJump ? (forceJump * jumpMaxForce) : forceJump;
-
-            }
+            MovementSystem(forceJump, lockDir, out direction, out jump);
 
             lookDirection = direction.x < 0 ? 0 : 180;
 
@@ -202,6 +187,31 @@ public class PlayerBehaviour : MonoBehaviour
         if (Input.touchCount == 0 && Time.time - lastJump <= timeJump)
         {
             lastJump = 0f;
+        }
+    }
+
+    private void MovementSystem(float forceJump, Vector2 lockDir, out Vector2 direction, out float jump)
+    {
+        if (newSystem)
+        {
+            // Recupération de la position du touché
+            var mousePos2D = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
+            var pos2D = new Vector2(transform.position.x, transform.position.y);
+            var offsetMousePos = mousePos2D - pos2D;
+            lockDir.Normalize();
+
+            direction = new Vector2(offsetMousePos.x < 0 ? -Mathf.Abs(lockDir.x) : Mathf.Abs(lockDir.x), lockDir.y);
+            jump = Mathf.Abs((mousePos2D - pos2D).x) >= distancePowerfullJump ? (forceJump * jumpMaxForce) : forceJump;
+        }
+        else
+        {
+            // Recupération de la position du touché
+            var mousePos2D = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
+            var pos2D = new Vector2(transform.position.x, transform.position.y);
+
+            // Calcul de la direction et de la force du saut
+            direction = (mousePos2D - pos2D).normalized;
+            jump = Vector2.Distance(mousePos2D, pos2D) >= distancePowerfullJump ? (forceJump * jumpMaxForce) : forceJump;
         }
     }
 
