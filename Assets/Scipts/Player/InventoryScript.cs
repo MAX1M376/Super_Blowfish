@@ -23,7 +23,7 @@ public class InventoryScript : MonoBehaviour
             {
                 prizesString = JsonConvert.DeserializeObject<List<PrizeString>>(reader.ReadToEnd());
             }
-            AllPrizes = prizesString.Select(x => x.ToPrize()).ToList();
+            AllPrizes = prizesString.Select(x => x.ToPrize(defaultSprite)).ToList();
         }
         catch (Exception ex)
         {
