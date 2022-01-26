@@ -98,6 +98,9 @@ MonoBehaviour:
   actualLives: 2
   recoveryTime: 0.3
   timeToDestroy: 2
+  probabilityWin: 0.1
+  namePrize: 
+  namePlayer: Player
   normalCrate: {fileID: 21300000, guid: da7f84696ff55b44fbc17acf19fb445d, type: 3}
   semiBrokenCrate: {fileID: 21300000, guid: 4388cbab960d39a41b35647aa9ede0d6, type: 3}
   brokenCrate: {fileID: 21300000, guid: 360cdfd1f9f491146a1bcdcf11069769, type: 3}

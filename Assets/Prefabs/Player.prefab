@@ -619,7 +619,7 @@ MonoBehaviour:
   deflatePerSecond: 10
   distancePowerfullJump: 1.8
   jumpMaxForce: 1
-  offsetGroundDistance: 0.05
+  offsetGroundDistance: 0.06
   rotationSpeed: 5
   newSystem: 0
   freeze: 0

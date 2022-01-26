@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CrateBehaviour : MonoBehaviour
 {
+    private bool enable = true;
     private float lastHit;
     private bool transparent = false;
+    private InventoryScript inv;
     private SpriteRenderer crrd;
 
     [Header("Property :")]
@@ -13,6 +16,11 @@ public class CrateBehaviour : MonoBehaviour
     [SerializeField] public int actualLives = 2;
     [SerializeField] private float recoveryTime = 0.3f;
     [SerializeField] private float timeToDestroy = 2f;
+
+    [Header("Prizes :")]
+    [SerializeField, Range(0f, 1f)] private float probabilityWin;
+    [SerializeField] private string namePrize;
+    [SerializeField] private string namePlayer;
 
     [Header("Crates sprites :")]
     [SerializeField] private Sprite normalCrate;
@@ -22,18 +30,20 @@ public class CrateBehaviour : MonoBehaviour
     private void Start()
     {
         crrd = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        inv = GameObject.Find(namePlayer).GetComponent<InventoryScript>();
     }
 
     public void Hit(int damage)
     {
+        if (!enable)
+        {
+            return;
+        }
+
         var timeBeforceHit = Time.time - lastHit;
         if (timeBeforceHit >= recoveryTime)
         {
             actualLives -= damage;
-        }
-
-        if (actualLives > 0)
-        {
             lastHit = Time.time;
         }
 
@@ -50,20 +60,44 @@ public class CrateBehaviour : MonoBehaviour
         if (actualLives <= 0)
         {
             crrd.sprite = brokenCrate;
+            enable = false;
             transparent = true;
             Destroy(gameObject, timeToDestroy);
             gameObject.GetComponent<BoxCollider2D>().offset = new Vector2(0.7f, 0.2f);
             gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1.0f, 0.4f);
+
+            float rnd = Random.Range(0f, 1f);
+            if (rnd <= probabilityWin)
+            {
+                inv.Inventory.Add(GetPrize());
+            }
         }
+    }
+
+    private Prize GetPrize()
+    {
+        Prize prize;
+        if (inv.AllPrizes.Any(x => x.Name == namePrize))
+        {
+            prize = inv.AllPrizes.First(x => x.Name == namePrize);
+        }
+        else
+        {
+            prize = inv.AllPrizes[Random.Range(0, inv.AllPrizes.Count - 1)];
+            if (!string.IsNullOrWhiteSpace(namePrize))
+            {
+                Debug.LogWarning("Prize name not found in all prizes");
+            }
+        }
+        return prize;
     }
 
     private void Update()
     {
-        float transparency = crrd.color.a;
         if (transparent)
         {
-            transparency = Mathf.Lerp(crrd.color.a, 0, Time.deltaTime * 1 / timeToDestroy);
+            float transparency = Mathf.Lerp(crrd.color.a, 0, Time.deltaTime * 1 / timeToDestroy);
+            crrd.color = new Color(crrd.color.r, crrd.color.g, crrd.color.b, transparency);
         }
-        crrd.color = new Color(crrd.color.r, crrd.color.g, crrd.color.b, transparency);
     }
 }

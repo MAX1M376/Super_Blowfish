@@ -51,7 +51,8 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private string mapName;
 
     [Header("UI :")]
-    [SerializeField] private Slider airBar; 
+    [SerializeField] private Slider airBar;
+    [SerializeField] private ShowItem itemShow;
 
     [Header("Body :")]
     [SerializeField] private InflateDeflate body;
@@ -63,7 +64,8 @@ public class PlayerBehaviour : MonoBehaviour
     {
         cipc = GetComponent<CircleCollider2D>();
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0;
+        itemShow.ShowPrize(new Prize() { Name = "Une caisse", Description = "Toutes les caisse du magazins sont offertes !", Image = Resources.Load<Sprite>(@"Prizes/saucisse") });
+
     }
 
     private void Update()
@@ -92,8 +94,12 @@ public class PlayerBehaviour : MonoBehaviour
         var downHits = Physics2D.OverlapCircleAll(transform.position - Vector3.up * offsetGroundDistance, cipc.radius / 2f);
         if (downHits.Any(x => x))
         {
-            force.y = 0f;
-            rotation.z = 0f;
+            if (Input.touchCount == 0)
+            {
+                rotation.z = force.y = 0f;
+            }
+
+            // Si collide avec une caisse
             if (downHits.Any(x => x.gameObject.tag == crateTag))
             {
                 force.y = (isOnWater ? jumpForceOnWater : jumpForce) / 1.5f;
@@ -109,41 +115,10 @@ public class PlayerBehaviour : MonoBehaviour
             rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg + orientation);
         }
 
-        // Collision avec le plafond
-        var upHits = Physics2D.RaycastAll(transform.position, Vector2.up, cipc.radius / 2f + offsetGroundDistance + 0.03f);
-        if (upHits.Any(x => x))
-        {
-            force.y = velocity.y = -0.5f;
-            if (upHits.Any(x => x.collider.gameObject.tag == crateTag))
-            {
-                force.y = (isOnWater ? jumpForceOnWater : jumpForce) / -3;
-                upHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
-            }
-        }
-
-        // Collision a gauche
-        var leftHits = Physics2D.RaycastAll(transform.position, Vector2.left, cipc.radius / 2f + offsetGroundDistance + 0.03f);
-        if (leftHits.Any(x => x))
-        {
-            force.x = velocity.x = horizontalVelocity = 0.1f;
-            if (leftHits.Any(x => x.collider.gameObject.tag == crateTag))
-            {
-                force.x = (isOnWater ? jumpForceOnWater : jumpForce) / 2;
-                leftHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
-            }
-        }
-
-        // Collision a droite
-        var rightHits = Physics2D.RaycastAll(transform.position, Vector2.right, cipc.radius / 2f + offsetGroundDistance + 0.03f);
-        if (rightHits.Any(x => x))
-        {
-            horizontalVelocity = force.x = velocity.x = -0.1f;
-            if (rightHits.Any(x => x.collider.gameObject.tag == crateTag))
-            {
-                force.x = (isOnWater ? jumpForceOnWater : jumpForce) / -2;
-                rightHits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(1));
-            }
-        }
+        // Collision avec les Raycast
+        force.y = RaycastPlayer(force.y, Vector2.up, -0.5f, -3, 1, 0.03f);
+        force.x = RaycastPlayer(force.x, Vector2.left, 0.1f, 2, 1, 0.03f);
+        force.x = RaycastPlayer(force.x, Vector2.right, -0.1f, -2, 1, 0.03f);
 
         // Mouvement du joueur
         Movement(isOnWater ? timeBetweenJumpOnWater : timeBetweenJump, isOnWater ? jumpForceOnWater : jumpForce, isOnWater ? lockedDirectionOnWater : lockedDirection);
@@ -164,6 +139,24 @@ public class PlayerBehaviour : MonoBehaviour
 
         // Application de la rotation du sprite en fnction de la direction
         transform.localRotation = Quaternion.Slerp(transform.localRotation, rotation, Time.fixedDeltaTime * rotationSpeed);
+    }
+
+    private float RaycastPlayer(float originalForce, Vector2 dir, float oppositeBounce, int ratioForce, int hitDamage, float additionOffset)
+    {
+        float resultat = originalForce;
+        var Hits = Physics2D.RaycastAll(transform.position, dir, cipc.radius / 2f + offsetGroundDistance + additionOffset);
+        if (Hits.Any(x => x))
+        {
+            resultat = oppositeBounce;
+
+            // Si touche une caisse 
+            if (Hits.Any(x => x.collider.gameObject.tag == crateTag))
+            {
+                resultat = (isOnWater ? jumpForceOnWater : jumpForce) / ratioForce;
+                Hits.ToList().Where(x => x.collider.gameObject.tag == crateTag).ToList().ForEach(x => x.collider.gameObject.GetComponent<CrateBehaviour>().Hit(hitDamage));
+            }
+        }
+        return resultat;
     }
 
     private void Movement(float timeJump, float forceJump, Vector2 lockDir)

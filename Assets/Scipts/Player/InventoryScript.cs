@@ -16,18 +16,26 @@ public class InventoryScript : MonoBehaviour
 
     void Start()
     {
+        Inventory = new List<Prize>();
+        AllPrizes = GetJson(@"Assets/prizes.json");
+    }
+
+    public List<Prize> GetJson(string jsonPath)
+    {
+        List<Prize> prizes;
         try
         {
             List<PrizeString> prizesString;
-            using (var reader = new StreamReader(@"Assets\prizes.json"))
+            using (var reader = new StreamReader(jsonPath))
             {
                 prizesString = JsonConvert.DeserializeObject<List<PrizeString>>(reader.ReadToEnd());
             }
-            AllPrizes = prizesString.Select(x => x.ToPrize(defaultSprite)).ToList();
+            prizes = prizesString.Select(x => x.ToPrize(defaultSprite)).ToList();
         }
         catch (Exception ex)
         {
-            Debug.LogException(ex);
+            prizes = new List<Prize> { new Prize { Name = "Error", Description = ex.Message, Image = defaultSprite } };
         }
+        return prizes;
     }
 }
