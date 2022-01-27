@@ -69,6 +69,7 @@ public class CrateBehaviour : MonoBehaviour
 
         if (actualLives <= 0)
         {
+            gameObject.tag = "Broken crates";
             crrd.sprite = brokenCrate;
             enable = false;
             transparent = true;

@@ -41,6 +41,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private float offsetGroundDistance = 0.02f;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private bool newSystem = false;
+    public static bool controlEnabled = true;
 
     [Header("State :")]
     [SerializeField] private bool freeze = false;
@@ -140,7 +141,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void Instance_OnGameStateChange(GameState state)
     {
-        freeze = state != GameState.GamePlay;
+        freeze = state == GameState.Paused;
     }
 
     private void OnDestroy()
@@ -169,7 +170,7 @@ public class PlayerBehaviour : MonoBehaviour
     private void Movement(float timeJump, float forceJump, Vector2 lockDir)
     {
         // Les inputs
-        if (Input.touchCount == 1 && Time.time - lastJump >= timeJump)
+        if (Input.touchCount == 1 && Time.time - lastJump >= timeJump && controlEnabled)
         {
             Vector2 direction;
             float jump;

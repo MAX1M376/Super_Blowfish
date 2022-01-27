@@ -17,6 +17,6 @@ public class ButtonPrizeScript : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        gameObject.GetComponent<Image>().sprite = downButton;
+        gameObject.GetComponent<Image>().sprite = upButton;
     }
 }

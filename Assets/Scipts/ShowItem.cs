@@ -42,6 +42,7 @@ public class ShowItem : MonoBehaviour
 
     [Header("Property :")]
     [SerializeField] private float growSpeed;
+    [SerializeField] private float timeToClose;
 
     [Header("Images :")]
     [SerializeField] private Image prizeImage;
@@ -65,14 +66,16 @@ public class ShowItem : MonoBehaviour
         gameObject.SetActive(true);
 
         GameStateManager.Instance.SetState(GameState.Paused);
+        PlayerBehaviour.controlEnabled = false;
     }
 
     public void ClosePrize()
     {
-        gameObject.SetActive(false);
         isShow = false;
 
         GameStateManager.Instance.SetState(GameState.GamePlay);
+
+        StartCoroutine(Coroutine_Close(timeToClose));
     }
 
     public void Update()
@@ -83,5 +86,12 @@ public class ShowItem : MonoBehaviour
             size = Mathf.Clamp(size, 0.0f, 1.0f);
         }
         gameObject.transform.localScale = new Vector3(size, size, 1);
+    }
+
+    private IEnumerator Coroutine_Close(float timeToWait)
+    {
+        yield return new WaitForSeconds(timeToWait);
+        gameObject.SetActive(false);
+        PlayerBehaviour.controlEnabled = true;
     }
 }
