@@ -17,19 +17,15 @@ public class InventoryScript : MonoBehaviour
     void Start()
     {
         Inventory = new List<Prize>();
-        AllPrizes = GetJson(@"Assets/prizes.json");
+        AllPrizes = GetJson();
     }
 
-    public List<Prize> GetJson(string jsonPath)
+    public List<Prize> GetJson()
     {
         List<Prize> prizes;
         try
         {
-            List<PrizeString> prizesString;
-            using (var reader = new StreamReader(jsonPath))
-            {
-                prizesString = JsonConvert.DeserializeObject<List<PrizeString>>(reader.ReadToEnd());
-            }
+            List<PrizeString> prizesString = JsonConvert.DeserializeObject<List<PrizeString>>(Resources.Load<TextAsset>("prizes").text);
             prizes = prizesString.Select(x => x.ToPrize(defaultSprite)).ToList();
         }
         catch (Exception ex)
