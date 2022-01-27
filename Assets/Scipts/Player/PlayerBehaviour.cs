@@ -11,7 +11,6 @@ public class PlayerBehaviour : MonoBehaviour
 {
     [HideInInspector] public Vector2 force;
 
-    private int keyboardDirection;
     private float lastJump;
     private float lookDirection = 0f;
     private float horizontalVelocity;
@@ -64,8 +63,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         cipc = GetComponent<CircleCollider2D>();
         rb = GetComponent<Rigidbody2D>();
-        itemShow.ShowPrize(new Prize() { Name = "Une caisse", Description = "Toutes les caisse du magazins sont offertes !", Image = Resources.Load<Sprite>(@"Prizes/saucisse") });
-
+        itemShow.ShowPrize(InventoryScript.AllPrizes[Random.Range(0, InventoryScript.AllPrizes.Count - 1)]);
     }
 
     private void Update()

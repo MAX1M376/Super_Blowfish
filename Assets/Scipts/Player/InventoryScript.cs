@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class InventoryScript : MonoBehaviour
 {
-    [HideInInspector] public List<Prize> AllPrizes { get; private set; }
+    [HideInInspector] public static List<Prize> AllPrizes { get; private set; }
     public List<Prize> Inventory { get; set; }
 
     [Header("Property")]

@@ -77,13 +77,13 @@ public class CrateBehaviour : MonoBehaviour
     private Prize GetPrize()
     {
         Prize prize;
-        if (inv.AllPrizes.Any(x => x.Name == namePrize))
+        if (InventoryScript.AllPrizes.Any(x => x.Name == namePrize))
         {
-            prize = inv.AllPrizes.First(x => x.Name == namePrize);
+            prize = InventoryScript.AllPrizes.First(x => x.Name == namePrize);
         }
         else
         {
-            prize = inv.AllPrizes[Random.Range(0, inv.AllPrizes.Count - 1)];
+            prize = InventoryScript.AllPrizes[Random.Range(0, InventoryScript.AllPrizes.Count - 1)];
             if (!string.IsNullOrWhiteSpace(namePrize))
             {
                 Debug.LogWarning("Prize name not found in all prizes");

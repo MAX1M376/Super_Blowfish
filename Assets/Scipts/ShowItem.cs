@@ -21,11 +21,6 @@ public class ShowItem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI descriptionText;
 
-    private void Start()
-    {
-        gameObject.SetActive(false);
-    }
-
     public void SetName(string name)
     {
         Name = name;
