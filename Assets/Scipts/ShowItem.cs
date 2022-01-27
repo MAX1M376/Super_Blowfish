@@ -7,13 +7,40 @@ using UnityEngine.UI;
 public class ShowItem : MonoBehaviour
 {
     private bool isShow = false;
+    private float size = 0.0f;
+    private string _name;
+    private string _description;
+    private Sprite _image;
 
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public Sprite Image { get; private set; }
+    public string Name 
+    { 
+        get { return _name; }
+        set
+        {
+            _name = value;
+            nameText.text = _name;
+        } 
+    }
+    public string Description
+    {
+        get { return _description; }
+        set
+        {
+            _description = value;
+            descriptionText.text = _description;
+        }
+    }
+    public Sprite Image
+    {
+        get { return _image; }
+        set
+        {
+            _image = value;
+            prizeImage.sprite = _image;
+        }
+    }
 
     [Header("Property :")]
-    [SerializeField, Range(0.0f, 1.0f)] private float size = 0.0f;
     [SerializeField] private float growSpeed;
 
     [Header("Images :")]
@@ -21,47 +48,39 @@ public class ShowItem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI descriptionText;
 
-    public void SetName(string name)
+    private void Start()
     {
-        Name = name;
-        nameText.text = name;
-    }
-
-    public void SetDescription(string description)
-    {
-        Description = description;
-        descriptionText.text = description;
-    }
-
-    public void SetImage(Sprite image)
-    {
-        Image = image;
-        prizeImage.sprite = image;
+        gameObject.SetActive(false);
     }
 
     public void ShowPrize(Prize prize)
     {
-        SetName(prize.Name);
-        SetDescription(prize.Description);
-        SetImage(prize.Image);
+        Name = prize.Name;
+        Description = prize.Description;
+        Image = prize.Image;
 
-        gameObject.transform.localScale = Vector3.zero; 
-        gameObject.SetActive(true);
+        size = 0.0f;
         isShow = true;
+        gameObject.transform.localScale = new Vector3(size, size, 1);
+        gameObject.SetActive(true);
+
+        GameStateManager.Instance.SetState(GameState.Paused);
     }
 
     public void ClosePrize()
     {
-        gameObject.transform.localScale = Vector3.zero;
         gameObject.SetActive(false);
         isShow = false;
+
+        GameStateManager.Instance.SetState(GameState.GamePlay);
     }
 
     public void Update()
     {
         if (isShow)
         {
-            size = Mathf.Lerp(size, 1, Time.deltaTime * growSpeed * 300.0f);
+            size += Time.deltaTime * growSpeed;
+            size = Mathf.Clamp(size, 0.0f, 1.0f);
         }
         gameObject.transform.localScale = new Vector3(size, size, 1);
     }

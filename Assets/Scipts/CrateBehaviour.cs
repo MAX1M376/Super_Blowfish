@@ -10,6 +10,8 @@ public class CrateBehaviour : MonoBehaviour
     private bool transparent = false;
     private InventoryScript inv;
     private SpriteRenderer crrd;
+    private ShowItem item;
+
 
     [Header("Property :")]
     [SerializeField] public int totalLives = 2;
@@ -21,6 +23,7 @@ public class CrateBehaviour : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float probabilityWin;
     [SerializeField] private string namePrize;
     [SerializeField] private string namePlayer;
+    [SerializeField] private string nameShowItem;
 
     [Header("Crates sprites :")]
     [SerializeField] private Sprite normalCrate;
@@ -31,6 +34,8 @@ public class CrateBehaviour : MonoBehaviour
     {
         crrd = transform.GetChild(0).GetComponent<SpriteRenderer>();
         inv = GameObject.Find(namePlayer).GetComponent<InventoryScript>();
+        item = GameObject.Find(nameShowItem).GetComponent<ShowItem>();
+        GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
     }
 
     public void Hit(int damage)
@@ -38,6 +43,11 @@ public class CrateBehaviour : MonoBehaviour
         if (!enable)
         {
             return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(namePrize) && !InventoryScript.AllPrizes.Any(x => x.Name == namePrize))
+        {
+            Debug.LogWarning("Prize name not found in all prizes");
         }
 
         var timeBeforceHit = Time.time - lastHit;
@@ -70,6 +80,7 @@ public class CrateBehaviour : MonoBehaviour
             if (rnd <= probabilityWin)
             {
                 inv.Inventory.Add(GetPrize());
+                item.ShowPrize(inv.Inventory.Last());
             }
         }
     }
@@ -84,12 +95,18 @@ public class CrateBehaviour : MonoBehaviour
         else
         {
             prize = InventoryScript.AllPrizes[Random.Range(0, InventoryScript.AllPrizes.Count - 1)];
-            if (!string.IsNullOrWhiteSpace(namePrize))
-            {
-                Debug.LogWarning("Prize name not found in all prizes");
-            }
         }
         return prize;
+    }
+
+    private void Instance_OnGameStateChange(GameState state)
+    {
+        enabled = state == GameState.GamePlay;
+    }
+
+    private void OnDestroy()
+    {
+        GameStateManager.Instance.OnGameStateChange -= Instance_OnGameStateChange;
     }
 
     private void Update()

@@ -51,7 +51,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     [Header("UI :")]
     [SerializeField] private Slider airBar;
-    [SerializeField] private ShowItem itemShow;
 
     [Header("Body :")]
     [SerializeField] private InflateDeflate body;
@@ -63,7 +62,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         cipc = GetComponent<CircleCollider2D>();
         rb = GetComponent<Rigidbody2D>();
-        itemShow.ShowPrize(InventoryScript.AllPrizes[Random.Range(0, InventoryScript.AllPrizes.Count - 1)]);
+        GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
     }
 
     private void Update()
@@ -137,6 +136,16 @@ public class PlayerBehaviour : MonoBehaviour
 
         // Application de la rotation du sprite en fnction de la direction
         transform.localRotation = Quaternion.Slerp(transform.localRotation, rotation, Time.fixedDeltaTime * rotationSpeed);
+    }
+
+    private void Instance_OnGameStateChange(GameState state)
+    {
+        freeze = state != GameState.GamePlay;
+    }
+
+    private void OnDestroy()
+    {
+        GameStateManager.Instance.OnGameStateChange -= Instance_OnGameStateChange;
     }
 
     private float RaycastPlayer(float originalForce, Vector2 dir, float oppositeBounce, int ratioForce, int hitDamage, float additionOffset)

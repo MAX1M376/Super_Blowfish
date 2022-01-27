@@ -341,7 +341,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &90633452
 RectTransform:
@@ -490,7 +490,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &334444028
 RectTransform:
@@ -788,6 +788,14 @@ PrefabInstance:
     - target: {fileID: 5051603725622433028, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
       propertyPath: m_Name
       value: Crate
+      objectReference: {fileID: 0}
+    - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
+      propertyPath: namePrize
+      value: "Simple r\xE9duction"
+      objectReference: {fileID: 0}
+    - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
+      propertyPath: probabilityWin
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
@@ -12996,7 +13004,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1226775430
 RectTransform:
@@ -13196,7 +13204,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1405047987
 RectTransform:
@@ -13333,7 +13341,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1431890490
 RectTransform:
@@ -13479,7 +13487,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1553035753
 RectTransform:
@@ -13727,7 +13735,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1676828002
 RectTransform:
@@ -13768,7 +13776,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!114 &1682112127
 MonoBehaviour:
@@ -13782,8 +13790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ad9a6003f1e31246b9e0f5699dd4a12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 0
-  growSpeed: 10
+  growSpeed: 1.5
   prizeImage: {fileID: 90633453}
   nameText: {fileID: 1405047988}
   descriptionText: {fileID: 1944429514}
@@ -14131,7 +14138,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1944429513
 RectTransform:
@@ -14329,7 +14336,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1980439960
 RectTransform:
