@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,11 +22,28 @@ public class InventoryScript : MonoBehaviour
 
     public List<Prize> GetJson()
     {
-        List<Prize> prizes;
+        List<Prize> prizes = new List<Prize>();
         try
         {
-            List<PrizeString> prizesString = JsonConvert.DeserializeObject<List<PrizeString>>(Resources.Load<TextAsset>("prizes").text);
-            prizes = prizesString.Select(x => x.ToPrize(defaultSprite)).ToList();
+            var jsonRoot = JSON.Parse(Resources.Load<TextAsset>("prizes").text);
+            foreach (JSONNode n in jsonRoot)
+            {
+                Sprite image;
+                try
+                {
+                    image = Resources.Load<Sprite>(n["ImagePath"]);
+                }
+                catch (Exception)
+                {
+                    image = defaultSprite;
+                }
+                prizes.Add(new Prize
+                {
+                    Name = n["Name"],
+                    Description = n["Description"],
+                    Image = image
+                });
+            }
         }
         catch (Exception ex)
         {

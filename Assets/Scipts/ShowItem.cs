@@ -52,7 +52,6 @@ public class ShowItem : MonoBehaviour
     private void Start()
     {
         gameObject.SetActive(true);
-        ShowPrize(new Prize { Name = "Test", Description = "Test de l'affiche de la fenetre", Image = null });
     }
 
     public void ShowPrize(Prize prize)
@@ -73,10 +72,10 @@ public class ShowItem : MonoBehaviour
     public void ClosePrize()
     {
         isShow = false;
+        gameObject.SetActive(false);
 
         GameStateManager.Instance.SetState(GameState.GamePlay);
-
-        StartCoroutine(Coroutine_Close(timeToClose));
+        PlayerBehaviour.controlEnabled = true;
     }
 
     public void Update()
@@ -87,12 +86,5 @@ public class ShowItem : MonoBehaviour
             size = Mathf.Clamp(size, 0.0f, 1.0f);
         }
         gameObject.transform.localScale = new Vector3(size, size, 1);
-    }
-
-    private IEnumerator Coroutine_Close(float timeToWait)
-    {
-        yield return new WaitForSeconds(timeToWait);
-        gameObject.SetActive(false);
-        PlayerBehaviour.controlEnabled = true;
     }
 }

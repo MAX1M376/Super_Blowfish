@@ -1,22 +1,22 @@
 [
-    {
-        "Name" : "Saucisse",
-        "Description" : "30% offert sur toutes les saucisses",
-        "Image" : "Prizes/saucisse"
-    },
-    {
-        "Name" : "Simple réduction",
-        "Description" : "10% de reduction sur un produit au choix",
-        "Image" : "Prizes/ticket"
-    },
-    {
-        "Name" : "Un mois de réduction",
-        "Description" : "5% sur l'ensemble des produits à condition d'avoir la somme des produits supérieur à 200€",
-        "Image" : "Prizes/multiticket"
-    },
-    {
-        "Name" : "Machine à laver",
-        "Description" : "20% offert sur toute les machine a laver du magazins",
-        "Image" : "Prizes/washing machine"
-    }
+  {
+    "Name": "Saucisse",
+    "Description": "30% offert sur toutes les saucisses",
+    "ImagePath": "Prizes/saucisse"
+  },
+  {
+    "Name": "Simple réduction",
+    "Description": "10% de reduction sur un produit au choix",
+    "ImagePath": "Prizes/ticket"
+  },
+  {
+    "Name": "Un mois de réduction",
+    "Description": "5% sur l'ensemble des produits à condition d'avoir la somme des produits supérieur à 200€",
+    "ImagePath": "Prizes/multiticket"
+  },
+  {
+    "Name": "Machine à laver",
+    "Description": "20% offert sur toute les machine a laver du magazins",
+    "ImagePath": "Prizes/washing machine"
+  }
 ]
