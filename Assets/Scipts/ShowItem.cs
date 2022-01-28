@@ -51,7 +51,8 @@ public class ShowItem : MonoBehaviour
 
     private void Start()
     {
-        gameObject.SetActive(false);
+        gameObject.SetActive(true);
+        ShowPrize(new Prize { Name = "Test", Description = "Test de l'affiche de la fenetre", Image = null });
     }
 
     public void ShowPrize(Prize prize)
