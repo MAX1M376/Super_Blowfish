@@ -92,17 +92,12 @@ public class PlayerBehaviour : MonoBehaviour
         var downHits = Physics2D.OverlapCircleAll(transform.position - Vector3.up * offsetGroundDistance, cipc.radius / 2f);
         if (downHits.Any(x => x))
         {
-<<<<<<< Updated upstream
             if (Input.touchCount == 0)
             {
                 rotation.z = force.y = 0f;
             }
 
             // Si collide avec une caisse
-=======
-            force.y = velocity.y = 0.0f;
-            rotation.z = 0f;
->>>>>>> Stashed changes
             if (downHits.Any(x => x.gameObject.tag == crateTag))
             {
                 force.y = (isOnWater ? jumpForceOnWater : jumpForce) / 1.5f;

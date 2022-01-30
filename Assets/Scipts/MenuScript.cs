@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneChanger : MonoBehaviour
+public class MenuScript : MonoBehaviour
 {
-    public void Level1()
+    public void StartGame()
     {
         SceneManager.LoadScene("Level1");
     }
