@@ -51,7 +51,7 @@ public class ShowItem : MonoBehaviour
 
     private void Start()
     {
-        gameObject.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     public void ShowPrize(Prize prize)

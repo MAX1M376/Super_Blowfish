@@ -14,10 +14,22 @@ public class InventoryScript : MonoBehaviour
     [Header("Property")]
     [SerializeField] private Sprite defaultSprite;
 
-    void Start()
+    private void Start()
     {
         Inventory = new List<Prize>();
         AllPrizes = GetJson();
+    }
+
+    private void Awake()
+    {
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("Inventory");
+
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public List<Prize> GetJson()

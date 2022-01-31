@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Crates
   - Broken crates
+  - Inventory
   layers:
   - Default
   - TransparentFX
