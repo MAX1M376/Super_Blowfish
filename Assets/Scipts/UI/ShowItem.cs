@@ -73,7 +73,10 @@ public class ShowItem : MonoBehaviour
         isShow = false;
         gameObject.SetActive(false);
 
-        GameObject.Find("Gameplay").GetComponent<GameplayScript>().Gameplay();
+        if (GameObject.Find("InventoryMenu") == null)
+        {
+            GameObject.Find("Gameplay").GetComponent<GameplayScript>().Gameplay();
+        }
     }
 
     public void Update()

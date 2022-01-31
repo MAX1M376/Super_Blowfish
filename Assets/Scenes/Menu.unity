@@ -214,6 +214,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1512494019}
     m_Modifications:
+    - target: {fileID: 2434540092687062955, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434540092687062955, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434540092687062955, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: ShowItem, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2434540093509534485, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -2640,7 +2652,7 @@ GameObject:
   - component: {fileID: 1894230622}
   - component: {fileID: 1894230621}
   m_Layer: 5
-  m_Name: Inventory
+  m_Name: InventoryMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

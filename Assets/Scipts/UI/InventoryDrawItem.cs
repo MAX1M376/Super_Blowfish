@@ -20,6 +20,11 @@ public class InventoryDrawItem : MonoBehaviour
         Draw(InventoryScript.Inventory);
     }
 
+    private void OnEnable()
+    {
+        Draw(InventoryScript.Inventory);
+    }
+
     public void Draw(List<Prize> prizes)
     {
         for (int i = 0; i < prizes.Count; i++)

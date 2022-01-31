@@ -9,14 +9,13 @@ public class CrateBehaviour : MonoBehaviour
     private float lastHit;
     private bool transparent = false;
     private SpriteRenderer crrd;
-    private ShowItem item;
+    public ShowItem item;
 
     [Header("Property :")]
     [SerializeField] private int totalLives = 2;
     [SerializeField] private int actualLives = 2;
     [SerializeField] private float recoveryTime = 0.3f;
     [SerializeField] private float timeToDestroy = 2f;
-    [SerializeField] private string showItemName = "Show Item";
 
     [Header("Prizes :")]
     [SerializeField, Range(0f, 1f)] private float probabilityWin;
@@ -30,7 +29,6 @@ public class CrateBehaviour : MonoBehaviour
     private void Start()
     {
         crrd = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        item = GameObject.FindGameObjectWithTag(showItemName).GetComponent<ShowItem>();
         GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
     }
 

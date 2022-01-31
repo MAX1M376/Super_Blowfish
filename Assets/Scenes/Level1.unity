@@ -979,6 +979,10 @@ PrefabInstance:
       value: Crate (3)
       objectReference: {fileID: 0}
     - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 1682112127}
+    - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
       propertyPath: namePrize
       value: Saucisse
       objectReference: {fileID: 0}
@@ -1138,7 +1142,7 @@ GameObject:
   - component: {fileID: 578219804}
   - component: {fileID: 578219803}
   m_Layer: 5
-  m_Name: Inventory
+  m_Name: InventoryMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1259,6 +1263,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crate
       objectReference: {fileID: 0}
+    - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 1682112127}
     - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
       propertyPath: probabilityWin
       value: 0.5
@@ -14364,6 +14372,10 @@ PrefabInstance:
       value: Crate (1)
       objectReference: {fileID: 0}
     - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 1682112127}
+    - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
       propertyPath: namePrize
       value: 
       objectReference: {fileID: 0}
@@ -15475,6 +15487,10 @@ PrefabInstance:
       value: Crate (2)
       objectReference: {fileID: 0}
     - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 1682112127}
+    - target: {fileID: 8151786638250279885, guid: 9ae598ff84c1ea948b3b3e06f7ad6346, type: 3}
       propertyPath: probabilityWin
       value: 0.5
       objectReference: {fileID: 0}
@@ -16169,6 +16185,22 @@ PrefabInstance:
     - target: {fileID: 2434540092581645437, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434540092687062955, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434540092687062955, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 2038149021}
+    - target: {fileID: 2434540092687062955, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434540092687062955, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: ShowItem, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 2434540092687062956, guid: 9d5b6d45f3c95254686108e4ee9551cb, type: 3}
       propertyPath: m_StaticEditorFlags
