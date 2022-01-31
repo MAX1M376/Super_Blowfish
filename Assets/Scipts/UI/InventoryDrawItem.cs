@@ -17,7 +17,7 @@ public class InventoryDrawItem : MonoBehaviour
 
     private void Start()
     {
-        Draw(InventoryScript.AllPrizes);
+        Draw(InventoryScript.Inventory);
     }
 
     public void Draw(List<Prize> prizes)

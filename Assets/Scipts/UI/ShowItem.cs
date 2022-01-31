@@ -65,8 +65,7 @@ public class ShowItem : MonoBehaviour
         gameObject.transform.localScale = new Vector3(size, size, 1);
         gameObject.SetActive(true);
 
-        GameStateManager.Instance.SetState(GameState.Paused);
-        PlayerBehaviour.controlEnabled = false;
+        GameObject.Find("Gameplay").GetComponent<GameplayScript>().Paused();
     }
 
     public void ClosePrize()
@@ -74,8 +73,7 @@ public class ShowItem : MonoBehaviour
         isShow = false;
         gameObject.SetActive(false);
 
-        GameStateManager.Instance.SetState(GameState.GamePlay);
-        PlayerBehaviour.controlEnabled = true;
+        GameObject.Find("Gameplay").GetComponent<GameplayScript>().Gameplay();
     }
 
     public void Update()

@@ -8,22 +8,19 @@ public class CrateBehaviour : MonoBehaviour
     private bool enable = true;
     private float lastHit;
     private bool transparent = false;
-    private InventoryScript inv;
     private SpriteRenderer crrd;
     private ShowItem item;
 
-
     [Header("Property :")]
-    [SerializeField] public int totalLives = 2;
-    [SerializeField] public int actualLives = 2;
+    [SerializeField] private int totalLives = 2;
+    [SerializeField] private int actualLives = 2;
     [SerializeField] private float recoveryTime = 0.3f;
     [SerializeField] private float timeToDestroy = 2f;
+    [SerializeField] private string showItemName = "Show Item";
 
     [Header("Prizes :")]
     [SerializeField, Range(0f, 1f)] private float probabilityWin;
     [SerializeField] private string namePrize;
-    [SerializeField] private string namePlayer;
-    [SerializeField] private string nameShowItem;
 
     [Header("Crates sprites :")]
     [SerializeField] private Sprite normalCrate;
@@ -33,8 +30,7 @@ public class CrateBehaviour : MonoBehaviour
     private void Start()
     {
         crrd = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        inv = GameObject.Find(namePlayer).GetComponent<InventoryScript>();
-        item = GameObject.Find(nameShowItem).GetComponent<ShowItem>();
+        item = GameObject.FindGameObjectWithTag(showItemName).GetComponent<ShowItem>();
         GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
     }
 
@@ -80,8 +76,8 @@ public class CrateBehaviour : MonoBehaviour
             float rnd = Random.Range(0f, 1f);
             if (rnd <= probabilityWin)
             {
-                inv.Inventory.Add(GetPrize());
-                item.ShowPrize(inv.Inventory.Last());
+                InventoryScript.Inventory.Add(GetPrize());
+                item.ShowPrize(InventoryScript.Inventory.Last());
             }
         }
     }

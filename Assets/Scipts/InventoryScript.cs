@@ -9,7 +9,7 @@ using UnityEngine;
 public class InventoryScript : MonoBehaviour
 {
     [HideInInspector] public static List<Prize> AllPrizes { get; private set; }
-    public List<Prize> Inventory { get; set; }
+    [HideInInspector] public static List<Prize> Inventory { get; set; }
 
     [Header("Property")]
     [SerializeField] private Sprite defaultSprite;
