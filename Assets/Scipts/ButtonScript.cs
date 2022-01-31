@@ -19,4 +19,9 @@ public class ButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         gameObject.GetComponent<Image>().sprite = upButton;
     }
+
+    private void OnDisable()
+    {
+        gameObject.GetComponent<Image>().sprite = upButton;
+    }
 }
