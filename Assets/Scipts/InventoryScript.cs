@@ -16,8 +16,8 @@ public class InventoryScript : MonoBehaviour
 
     private void Start()
     {
-        Inventory = new List<Prize>();
         AllPrizes = GetJson();
+        Inventory = Enumerable.Range(0, 5).Select(x => AllPrizes[UnityEngine.Random.Range(0, AllPrizes.Count - 1)]).ToList();
     }
 
     private void Awake()
