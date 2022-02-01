@@ -32,7 +32,7 @@ public class InventoryDrawItem : MonoBehaviour
             ShowButtonItem(prizes[i], i);
         }
         var size = gameObject.GetComponent<RectTransform>().sizeDelta;
-        size.y = spaceBetweenItem * Mathf.CeilToInt(InventoryScript.AllPrizes.Count / 2);
+        size.y = spaceBetweenItem * Mathf.CeilToInt(InventoryScript.Inventory.Count / 2f);
         gameObject.GetComponent<RectTransform>().sizeDelta = size;
     }
 

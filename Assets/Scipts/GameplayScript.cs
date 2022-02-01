@@ -9,6 +9,18 @@ public class GameplayScript : MonoBehaviour
         Gameplay();
     }
 
+    private void Awake()
+    {
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("Gameplay");
+
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     public void Paused()
     {
         GameStateManager.Instance.SetState(GameState.Paused);

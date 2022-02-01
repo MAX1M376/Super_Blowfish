@@ -8,6 +8,7 @@ TagManager:
   - Broken crates
   - Inventory
   - Show Item
+  - Gameplay
   layers:
   - Default
   - TransparentFX

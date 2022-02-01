@@ -39,11 +39,6 @@ public class CrateBehaviour : MonoBehaviour
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(namePrize) && !InventoryScript.AllPrizes.Any(x => x.Name == namePrize))
-        {
-            Debug.LogWarning("Prize name not found in all prizes");
-        }
-
         var timeBeforceHit = Time.time - lastHit;
         if (timeBeforceHit >= recoveryTime)
         {
