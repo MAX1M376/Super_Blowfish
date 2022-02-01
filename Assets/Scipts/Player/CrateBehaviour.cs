@@ -30,6 +30,7 @@ public class CrateBehaviour : MonoBehaviour
     {
         crrd = transform.GetChild(0).GetComponent<SpriteRenderer>();
         GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
+        InventoryScript.PrizeEarnDuringLevel = 0;
     }
 
     public void Hit(int damage)
@@ -70,6 +71,7 @@ public class CrateBehaviour : MonoBehaviour
             if (rnd <= probabilityWin)
             {
                 InventoryScript.Inventory.Add(GetPrize());
+                InventoryScript.PrizeEarnDuringLevel += 1;
                 item.ShowPrize(InventoryScript.Inventory.Last());
             }
         }

@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class InventoryScript : MonoBehaviour
 {
+    [HideInInspector] public static int PrizeEarnDuringLevel = 0;
     [HideInInspector] public static List<Prize> AllPrizes { get; private set; }
     [HideInInspector] public static List<Prize> Inventory { get; set; }
 
@@ -17,7 +18,7 @@ public class InventoryScript : MonoBehaviour
     private void Start()
     {
         AllPrizes = GetJson();
-        Inventory = Enumerable.Range(0, 5).Select(x => AllPrizes[UnityEngine.Random.Range(0, AllPrizes.Count - 1)]).ToList();
+        Inventory = new List<Prize>();
     }
 
     private void Awake()

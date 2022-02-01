@@ -620,11 +620,12 @@ MonoBehaviour:
   jumpMaxForce: 1
   offsetGroundDistance: 0.08
   rotationSpeed: 5
-  newSystem: 0
+  newSystem: 1
   freeze: 0
-  isOnWater: 0
+  isOnWater: 1
   mapName: Map
   airBar: {fileID: 0}
+  goScript: {fileID: 0}
   body: {fileID: 1682405063009855337}
   crateTag: Crates
 --- !u!1 &6095073900159459357

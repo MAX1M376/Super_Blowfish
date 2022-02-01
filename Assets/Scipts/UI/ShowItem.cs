@@ -65,8 +65,11 @@ public class ShowItem : MonoBehaviour
         gameObject.transform.localScale = new Vector3(size, size, 1);
         gameObject.SetActive(true);
 
-        GameStateManager.Instance.SetState(GameState.Paused);
-        PlayerBehaviour.controlEnabled = false;
+        var gameplay = GameObject.FindGameObjectWithTag("Gameplay");
+        if (gameplay != null)
+        {
+            gameplay.GetComponent<GameplayScript>().Paused();
+        }
     }
 
     public void ClosePrize()
@@ -76,8 +79,7 @@ public class ShowItem : MonoBehaviour
 
         if (GameObject.Find("InventoryMenu") == null)
         {
-            GameStateManager.Instance.SetState(GameState.GamePlay);
-            PlayerBehaviour.controlEnabled = true;
+            GameObject.FindGameObjectWithTag("Gameplay").GetComponent<GameplayScript>().Gameplay();
         }
     }
 

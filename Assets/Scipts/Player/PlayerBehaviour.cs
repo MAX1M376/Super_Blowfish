@@ -52,6 +52,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     [Header("UI :")]
     [SerializeField] private Slider airBar;
+    [SerializeField] private GameOverScript goScript;
 
     [Header("Body :")]
     [SerializeField] private InflateDeflate body;
@@ -63,7 +64,9 @@ public class PlayerBehaviour : MonoBehaviour
     {
         cipc = GetComponent<CircleCollider2D>();
         rb = GetComponent<Rigidbody2D>();
+        controlEnabled = true;
         GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
+        GameStateManager.Instance.SetState(GameState.GamePlay);
     }
 
     private void Update()
@@ -123,6 +126,12 @@ public class PlayerBehaviour : MonoBehaviour
 
         // Degonflement ou regonflement
         Inflate(isOnWater);
+
+        controlEnabled = body.InflateLevel != 0f;
+        if (!controlEnabled && rb.velocity.y == 0f)
+        {
+
+        }
     }
 
     private void FixedUpdate()
