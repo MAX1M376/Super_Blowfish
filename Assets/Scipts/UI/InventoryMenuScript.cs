@@ -2,23 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InventoryDrawItem : MonoBehaviour
+public class InventoryMenuScript : MonoBehaviour
 {
     [Header("Property :")]
     [SerializeField] private float spaceBetweenItem;
     [SerializeField] private Vector2 pivotLeft;
     [SerializeField] private Vector2 pivotRight;
 
+    [Header("Content :")]
+    [SerializeField] private RectTransform rect;
+
     [Header("Inventory Item :")]
-    [SerializeField] private GameObject itemButton;
-
-    [Header("Item Window :")]
-    [SerializeField] private ShowItem showItem;
-
-    private void Start()
-    {
-        Draw(InventoryScript.Inventory);
-    }
+    [SerializeField] private GameObject prefabItemButton;
 
     private void OnEnable()
     {
@@ -31,17 +26,16 @@ public class InventoryDrawItem : MonoBehaviour
         {
             ShowButtonItem(prizes[i], i);
         }
-        var size = gameObject.GetComponent<RectTransform>().sizeDelta;
+        var size = rect.sizeDelta;
         size.y = spaceBetweenItem * Mathf.CeilToInt(InventoryScript.Inventory.Count / 2f);
-        gameObject.GetComponent<RectTransform>().sizeDelta = size;
+        rect.sizeDelta = size;
     }
 
     private void ShowButtonItem(Prize prize, int i)
     {
-        GameObject instantiatedItem = Instantiate(itemButton, gameObject.transform);
+        GameObject instantiatedItem = Instantiate(prefabItemButton, rect.transform);
         var script = instantiatedItem.GetComponent<InventoryItem>();
         script.Prize = prize;
-        script.ShowItem = showItem;
         script.ChangePivotPos((i % 2) == 0 ? pivotLeft : pivotRight, Mathf.FloorToInt(i / 2f) * -spaceBetweenItem);
     }
 }

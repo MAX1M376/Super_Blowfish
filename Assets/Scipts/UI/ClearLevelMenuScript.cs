@@ -5,23 +5,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameOverScript : MonoBehaviour
+public class ClearLevelMenuScript : MonoBehaviour
 {
-    private string textLevelConst;
-    private string textPrizeConst;
-
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI textLevel;
     [SerializeField] private TextMeshProUGUI textPrize;
 
-    private void Start()
-    {
-        textLevelConst = textLevel.text;
-        textPrizeConst = textPrize.text;
-        gameObject.SetActive(false);
-    }
-
-    public void ShowGameOverWindow()
+    private void OnEnable()
     {
         textLevel.text = textLevel.text.Replace("1", SceneManager.GetActiveScene().buildIndex.ToString());
         textPrize.text = textPrize.text.Replace("1", InventoryScript.PrizeEarnDuringLevel.ToString());
@@ -29,7 +19,6 @@ public class GameOverScript : MonoBehaviour
         {
             textPrize.text = string.Join(" ", textPrize.text.Split(" ").Select(x => x = (x.Contains("offre") ? "offres" : x)).ToList());
         }
-        gameObject.SetActive(true);
         GameObject.FindGameObjectWithTag("Gameplay").GetComponent<GameplayScript>().Paused();
     }
 }

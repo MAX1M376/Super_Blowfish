@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CrateBehaviour : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class CrateBehaviour : MonoBehaviour
     private float lastHit;
     private bool transparent = false;
     private SpriteRenderer crrd;
-    public ShowItem item;
+    private GameplayScript gameplay;
 
     [Header("Property :")]
     [SerializeField] private int totalLives = 2;
@@ -28,7 +29,20 @@ public class CrateBehaviour : MonoBehaviour
 
     private void Start()
     {
-        crrd = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        crrd = transform.GetChild(0).GetComponent<SpriteRenderer>(); 
+        var gameplayGO = GameObject.FindGameObjectWithTag("Gameplay");
+        if (gameplayGO != null)
+        {
+            gameplay = gameplayGO.GetComponent<GameplayScript>();
+        }
+        else
+        {
+            if (SceneManager.GetActiveScene().buildIndex != 0)
+            {
+                Debug.LogError("Gameplay components not load");
+            }
+        }
+
         GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
         InventoryScript.PrizeEarnDuringLevel = 0;
     }
@@ -70,9 +84,11 @@ public class CrateBehaviour : MonoBehaviour
             float rnd = Random.Range(0f, 1f);
             if (rnd <= probabilityWin)
             {
+                gameplay.ShowItemScript.gameObject.SetActive(true);
+
                 InventoryScript.Inventory.Add(GetPrize());
                 InventoryScript.PrizeEarnDuringLevel += 1;
-                item.ShowPrize(InventoryScript.Inventory.Last());
+                gameplay.ShowItemScript.ShowPrize(InventoryScript.Inventory.Last());
             }
         }
     }

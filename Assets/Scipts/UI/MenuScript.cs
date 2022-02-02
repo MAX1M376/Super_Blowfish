@@ -5,13 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class MenuScript : MonoBehaviour
 {
-    public void StartGame()
+    public void NextScene()
     {
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    public void BackMenu()
+    public void MenuScene()
     {
         SceneManager.LoadScene("Menu");
+    }
+
+    public void ChangeScene(int buildIndex)
+    {
+        try
+        {
+            SceneManager.LoadScene(buildIndex);
+        }
+        catch (System.Exception)
+        {
+            Debug.LogWarning("Scene don't exist");
+        }
     }
 }

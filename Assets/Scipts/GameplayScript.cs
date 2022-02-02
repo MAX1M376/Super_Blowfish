@@ -4,8 +4,21 @@ using UnityEngine;
 
 public class GameplayScript : MonoBehaviour
 {
+
+    [Header("Public Scripts :")]
+    public ShowItemMenuScript ShowItemScript;
+    public InventoryMenuScript InventoryScript;
+    public GameOverMenuScript GameOverScript;
+    public ClearLevelMenuScript ClearLevelScript;
+
+    [Header("GameObject names :")]
+    public string WindowToShowPrize;
+    public string WindowToShowInventory;
+    public string WindowToShowGameOver;
+    public string WindowToShowClearLevel;
+
     private void Start()
-    {
+    { 
         Gameplay();
     }
 

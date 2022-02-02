@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class InventoryItem : MonoBehaviour
 {
-    [HideInInspector] public ShowItem ShowItem;
     public Prize Prize 
     { 
         get { return prize; }
@@ -20,6 +20,7 @@ public class InventoryItem : MonoBehaviour
 
     private RectTransform rectTrans;
     private Prize prize;
+    private GameplayScript gameplay;
 
     [Header("Components :")]
     [SerializeField] private TextMeshProUGUI textMesh;
@@ -28,6 +29,18 @@ public class InventoryItem : MonoBehaviour
     public void Start()
     {
         rectTrans = gameObject.GetComponent<RectTransform>();
+        var gameplayGO = GameObject.FindGameObjectWithTag("Gameplay");
+        if (gameplayGO != null)
+        {
+            gameplay = gameplayGO.GetComponent<GameplayScript>();
+        }
+        else
+        {
+            if (SceneManager.GetActiveScene().buildIndex != 0)
+            {
+                Debug.LogError("Gameplay components not load");
+            }
+        }
     }
 
     public void ChangePivotPos(Vector2 pivot, float Y)
@@ -44,9 +57,6 @@ public class InventoryItem : MonoBehaviour
 
     public void OpenItem()
     {
-        if (ShowItem != null)
-        {
-            ShowItem.ShowPrize(Prize);
-        }
+        gameplay.ShowItemScript.ShowPrize(Prize);
     }
 }

@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class ShowItem : MonoBehaviour
+public class ShowItemMenuScript : MonoBehaviour
 {
     private bool isShow = false;
     private float size = 0.0f;
     private string _name;
     private string _description;
     private Sprite _image;
+    private GameplayScript gameplay;
 
     public string Name 
     { 
@@ -51,15 +53,22 @@ public class ShowItem : MonoBehaviour
 
     private void Start()
     {
-        gameObject.SetActive(false);
+        var gameplayGO = GameObject.FindGameObjectWithTag("Gameplay");
+        if (gameplayGO != null)
+        {
+            gameplay = gameplayGO.GetComponent<GameplayScript>();
+        }
+        else
+        {
+            if (SceneManager.GetActiveScene().buildIndex != 0)
+            {
+                Debug.LogError("Gameplay components not load");
+            }
+        }
     }
 
-    public void ShowPrize(Prize prize)
+    private void OnEnable()
     {
-        Name = prize.Name;
-        Description = prize.Description;
-        Image = prize.Image;
-
         size = 0.0f;
         isShow = true;
         gameObject.transform.localScale = new Vector3(size, size, 1);
@@ -72,14 +81,21 @@ public class ShowItem : MonoBehaviour
         }
     }
 
-    public void ClosePrize()
+    public void ShowPrize(Prize prize)
+    {
+        Name = prize.Name;
+        Description = prize.Description;
+        Image = prize.Image;
+    }
+
+    private void OnDisable()
     {
         isShow = false;
         gameObject.SetActive(false);
 
-        if (GameObject.Find("InventoryMenu") == null)
+        if (SceneManager.GetActiveScene().buildIndex != 0)
         {
-            GameObject.FindGameObjectWithTag("Gameplay").GetComponent<GameplayScript>().Gameplay();
+            gameplay.Gameplay();
         }
     }
 

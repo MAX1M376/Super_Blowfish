@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CircleCollider2D))]
@@ -18,6 +19,7 @@ public class PlayerBehaviour : MonoBehaviour
     private Quaternion rotation;
     private CircleCollider2D cipc;
     private Rigidbody2D rb;
+    private GameplayScript gameplay;
 
     [Header("Propety :")]
     [SerializeField] private float gravityForce = 14f;
@@ -52,7 +54,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     [Header("UI :")]
     [SerializeField] private Slider airBar;
-    [SerializeField] private GameOverScript goScript;
 
     [Header("Body :")]
     [SerializeField] private InflateDeflate body;
@@ -64,6 +65,19 @@ public class PlayerBehaviour : MonoBehaviour
     {
         cipc = GetComponent<CircleCollider2D>();
         rb = GetComponent<Rigidbody2D>();
+        var gameplayGO = GameObject.FindGameObjectWithTag("Gameplay");
+        if (gameplayGO != null)
+        {
+            gameplay = gameplayGO.GetComponent<GameplayScript>();
+        }
+        else
+        {
+            if (SceneManager.GetActiveScene().buildIndex != 0)
+            {
+                Debug.LogError("Gameplay components not load");
+            }
+        }
+
         controlEnabled = true;
         GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
         GameStateManager.Instance.SetState(GameState.GamePlay);
@@ -128,9 +142,16 @@ public class PlayerBehaviour : MonoBehaviour
         Inflate(isOnWater);
 
         controlEnabled = body.InflateLevel != 0f;
-        if (!controlEnabled && rb.velocity.y == 0f)
+        if (body.InflateLevel == 0f && rb.velocity == Vector2.zero && downHits.Count() > 0)
         {
-            goScript.ShowGameOverWindow();
+            gameplay.GameOverScript.gameObject.SetActive(true);
+            return;
+        }
+
+        if (isOnWater && GameObject.FindGameObjectsWithTag(crateTag).Count() == 0)
+        {
+            controlEnabled = false;
+            gameplay.ClearLevelScript.gameObject.SetActive(true);
         }
     }
 
