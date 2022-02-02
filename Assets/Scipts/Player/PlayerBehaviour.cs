@@ -130,7 +130,7 @@ public class PlayerBehaviour : MonoBehaviour
         controlEnabled = body.InflateLevel != 0f;
         if (!controlEnabled && rb.velocity.y == 0f)
         {
-
+            goScript.ShowGameOverWindow();
         }
     }
 
