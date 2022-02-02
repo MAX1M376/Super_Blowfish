@@ -531,7 +531,6 @@ GameObject:
   - component: {fileID: 8113528471265466913}
   - component: {fileID: 6053095698510454284}
   - component: {fileID: 6053095698510454287}
-  - component: {fileID: 5932621554473209021}
   m_Layer: 2
   m_Name: Player
   m_TagString: Untagged
@@ -621,26 +620,14 @@ MonoBehaviour:
   jumpMaxForce: 1
   offsetGroundDistance: 0.08
   rotationSpeed: 5
-  newSystem: 0
+  newSystem: 1
   freeze: 0
-  isOnWater: 0
+  isOnWater: 1
   mapName: Map
   airBar: {fileID: 0}
+  goScript: {fileID: 0}
   body: {fileID: 1682405063009855337}
   crateTag: Crates
---- !u!114 &5932621554473209021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6053095698510454290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a634b7e03a0940c44ac7fd0f8b3e99e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultSprite: {fileID: 0}
 --- !u!1 &6095073900159459357
 GameObject:
   m_ObjectHideFlags: 0

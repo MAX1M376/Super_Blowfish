@@ -8,22 +8,18 @@ public class CrateBehaviour : MonoBehaviour
     private bool enable = true;
     private float lastHit;
     private bool transparent = false;
-    private InventoryScript inv;
     private SpriteRenderer crrd;
-    private ShowItem item;
-
+    public ShowItem item;
 
     [Header("Property :")]
-    [SerializeField] public int totalLives = 2;
-    [SerializeField] public int actualLives = 2;
+    [SerializeField] private int totalLives = 2;
+    [SerializeField] private int actualLives = 2;
     [SerializeField] private float recoveryTime = 0.3f;
     [SerializeField] private float timeToDestroy = 2f;
 
     [Header("Prizes :")]
     [SerializeField, Range(0f, 1f)] private float probabilityWin;
     [SerializeField] private string namePrize;
-    [SerializeField] private string namePlayer;
-    [SerializeField] private string nameShowItem;
 
     [Header("Crates sprites :")]
     [SerializeField] private Sprite normalCrate;
@@ -33,9 +29,8 @@ public class CrateBehaviour : MonoBehaviour
     private void Start()
     {
         crrd = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        inv = GameObject.Find(namePlayer).GetComponent<InventoryScript>();
-        item = GameObject.Find(nameShowItem).GetComponent<ShowItem>();
         GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
+        InventoryScript.PrizeEarnDuringLevel = 0;
     }
 
     public void Hit(int damage)
@@ -43,11 +38,6 @@ public class CrateBehaviour : MonoBehaviour
         if (!enable)
         {
             return;
-        }
-
-        if (!string.IsNullOrWhiteSpace(namePrize) && !InventoryScript.AllPrizes.Any(x => x.Name == namePrize))
-        {
-            Debug.LogWarning("Prize name not found in all prizes");
         }
 
         var timeBeforceHit = Time.time - lastHit;
@@ -80,8 +70,9 @@ public class CrateBehaviour : MonoBehaviour
             float rnd = Random.Range(0f, 1f);
             if (rnd <= probabilityWin)
             {
-                inv.Inventory.Add(GetPrize());
-                item.ShowPrize(inv.Inventory.Last());
+                InventoryScript.Inventory.Add(GetPrize());
+                InventoryScript.PrizeEarnDuringLevel += 1;
+                item.ShowPrize(InventoryScript.Inventory.Last());
             }
         }
     }

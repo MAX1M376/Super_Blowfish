@@ -51,7 +51,7 @@ public class ShowItem : MonoBehaviour
 
     private void Start()
     {
-        gameObject.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     public void ShowPrize(Prize prize)
@@ -65,8 +65,11 @@ public class ShowItem : MonoBehaviour
         gameObject.transform.localScale = new Vector3(size, size, 1);
         gameObject.SetActive(true);
 
-        GameStateManager.Instance.SetState(GameState.Paused);
-        PlayerBehaviour.controlEnabled = false;
+        var gameplay = GameObject.FindGameObjectWithTag("Gameplay");
+        if (gameplay != null)
+        {
+            gameplay.GetComponent<GameplayScript>().Paused();
+        }
     }
 
     public void ClosePrize()
@@ -74,8 +77,10 @@ public class ShowItem : MonoBehaviour
         isShow = false;
         gameObject.SetActive(false);
 
-        GameStateManager.Instance.SetState(GameState.GamePlay);
-        PlayerBehaviour.controlEnabled = true;
+        if (GameObject.Find("InventoryMenu") == null)
+        {
+            GameObject.FindGameObjectWithTag("Gameplay").GetComponent<GameplayScript>().Gameplay();
+        }
     }
 
     public void Update()

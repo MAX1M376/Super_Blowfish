@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ButtonPrizeScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ButtonScript : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Button images :")]
     [SerializeField] private Sprite upButton;
@@ -16,6 +16,11 @@ public class ButtonPrizeScript : MonoBehaviour, IPointerEnterHandler, IPointerEx
     }
 
     public void OnPointerExit(PointerEventData eventData)
+    {
+        gameObject.GetComponent<Image>().sprite = upButton;
+    }
+
+    private void OnDisable()
     {
         gameObject.GetComponent<Image>().sprite = upButton;
     }

@@ -8,16 +8,29 @@ using UnityEngine;
 
 public class InventoryScript : MonoBehaviour
 {
+    [HideInInspector] public static int PrizeEarnDuringLevel = 0;
     [HideInInspector] public static List<Prize> AllPrizes { get; private set; }
-    public List<Prize> Inventory { get; set; }
+    [HideInInspector] public static List<Prize> Inventory { get; set; }
 
     [Header("Property")]
     [SerializeField] private Sprite defaultSprite;
 
-    void Start()
+    private void Start()
     {
-        Inventory = new List<Prize>();
         AllPrizes = GetJson();
+        Inventory = new List<Prize>();
+    }
+
+    private void Awake()
+    {
+        GameObject[] objs = GameObject.FindGameObjectsWithTag("Inventory");
+
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     public List<Prize> GetJson()
