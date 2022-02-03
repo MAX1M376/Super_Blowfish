@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class CrateBehaviour : MonoBehaviour
 {
-    private bool enable = true;
+    private bool active = true;
     private float lastHit;
     private bool transparent = false;
     private SpriteRenderer crrd;
@@ -27,9 +27,8 @@ public class CrateBehaviour : MonoBehaviour
     [SerializeField] private Sprite semiBrokenCrate;
     [SerializeField] private Sprite brokenCrate;
 
-    private void Start()
+    private void Awake()
     {
-        crrd = transform.GetChild(0).GetComponent<SpriteRenderer>(); 
         var gameplayGO = GameObject.FindGameObjectWithTag("Gameplay");
         if (gameplayGO != null)
         {
@@ -37,19 +36,23 @@ public class CrateBehaviour : MonoBehaviour
         }
         else
         {
-            if (SceneManager.GetActiveScene().buildIndex != 0)
+            if (SceneManager.GetActiveScene().buildIndex > 0)
             {
                 Debug.LogError("Gameplay components not load");
             }
         }
+    }
 
+    private void Start()
+    {
+        crrd = transform.GetChild(0).GetComponent<SpriteRenderer>(); 
         GameStateManager.Instance.OnGameStateChange += Instance_OnGameStateChange;
         InventoryScript.PrizeEarnDuringLevel = 0;
     }
 
     public void Hit(int damage)
     {
-        if (!enable)
+        if (!active)
         {
             return;
         }
@@ -75,7 +78,7 @@ public class CrateBehaviour : MonoBehaviour
         {
             gameObject.tag = "Broken crates";
             crrd.sprite = brokenCrate;
-            enable = false;
+            active = false;
             transparent = true;
             Destroy(gameObject, timeToDestroy);
             gameObject.GetComponent<BoxCollider2D>().offset = new Vector2(0.7f, 0.2f);
@@ -86,9 +89,16 @@ public class CrateBehaviour : MonoBehaviour
             {
                 gameplay.ShowItemScript.gameObject.SetActive(true);
 
-                InventoryScript.Inventory.Add(GetPrize());
-                InventoryScript.PrizeEarnDuringLevel += 1;
-                gameplay.ShowItemScript.ShowPrize(InventoryScript.Inventory.Last());
+                try
+                {
+                    InventoryScript.Inventory.Add(GetPrize());
+                    InventoryScript.PrizeEarnDuringLevel += 1;
+                    gameplay.ShowItemScript.ShowPrize(InventoryScript.Inventory.Last());
+                }
+                catch (System.Exception)
+                {
+                    Debug.LogWarning("Inventory Script isn't load, it's load at start of menu scene");
+                }
             }
         }
     }

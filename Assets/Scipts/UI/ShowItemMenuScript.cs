@@ -51,7 +51,7 @@ public class ShowItemMenuScript : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI descriptionText;
 
-    private void Start()
+    private void Awake()
     {
         var gameplayGO = GameObject.FindGameObjectWithTag("Gameplay");
         if (gameplayGO != null)
@@ -60,7 +60,7 @@ public class ShowItemMenuScript : MonoBehaviour
         }
         else
         {
-            if (SceneManager.GetActiveScene().buildIndex != 0)
+            if (SceneManager.GetActiveScene().buildIndex > 0)
             {
                 Debug.LogError("Gameplay components not load");
             }
@@ -72,12 +72,10 @@ public class ShowItemMenuScript : MonoBehaviour
         size = 0.0f;
         isShow = true;
         gameObject.transform.localScale = new Vector3(size, size, 1);
-        gameObject.SetActive(true);
 
-        var gameplay = GameObject.FindGameObjectWithTag("Gameplay");
-        if (gameplay != null)
+        if (SceneManager.GetActiveScene().buildIndex > 0)
         {
-            gameplay.GetComponent<GameplayScript>().Paused();
+            gameplay.Paused();
         }
     }
 
@@ -91,9 +89,8 @@ public class ShowItemMenuScript : MonoBehaviour
     private void OnDisable()
     {
         isShow = false;
-        gameObject.SetActive(false);
 
-        if (SceneManager.GetActiveScene().buildIndex != 0)
+        if (SceneManager.GetActiveScene().buildIndex > 0)
         {
             gameplay.Gameplay();
         }

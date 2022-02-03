@@ -5,6 +5,39 @@ using UnityEngine.SceneManagement;
 
 public class MenuScript : MonoBehaviour
 {
+    private GameplayScript gameplay;
+
+    private void Awake()
+    {
+        var gameplayGO = GameObject.FindGameObjectWithTag("Gameplay");
+        if (gameplayGO != null)
+        {
+            gameplay = gameplayGO.GetComponent<GameplayScript>();
+        }
+        else
+        {
+            if (SceneManager.GetActiveScene().buildIndex > 0)
+            {
+                Debug.LogError("Gameplay components not load");
+            }
+        }
+    }
+    private void OnEnable()
+    {
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            gameplay.Paused();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+        {
+            gameplay.Gameplay();
+        }
+    }
+
     public void NextScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
