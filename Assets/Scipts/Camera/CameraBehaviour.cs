@@ -28,15 +28,40 @@ public class CameraBehaviour : MonoBehaviour
         screenWorldWidth = cam.ScreenToWorldPoint(Vector3.right * cam.pixelWidth).x - cam.ScreenToWorldPoint(Vector3.zero).x;
         screenWorldHeight = cam.ScreenToWorldPoint(Vector3.down * cam.pixelHeight).y - cam.ScreenToWorldPoint(Vector3.zero).y;
         bottomLeftScreenWorld = cam.ScreenToWorldPoint(Vector3.zero) - transform.position;
+        transform.position = CameraPosition();
     }
 
     private void Update()
+    {
+        transform.position = Vector3.Lerp(transform.position, CameraPosition(), smoothSpeed * Time.deltaTime * 300);
+    }
+
+    public IEnumerator Shake(float duration, float magnitude)
+    {
+        Vector3 pos = transform.position;
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
+        {
+            pos.x += Random.Range(-1.0f, 1.0f) * magnitude;
+            pos.y += Random.Range(-1.0f, 1.0f) * magnitude;
+
+            pos.x = Mathf.Clamp(bottomLeftScreenWorld.x + pos.x, topLeft.x, bottomRight.x - screenWorldWidth) - bottomLeftScreenWorld.x;
+            pos.y = Mathf.Clamp(bottomLeftScreenWorld.y + pos.y, bottomRight.y, topLeft.y + screenWorldHeight) - bottomLeftScreenWorld.y;
+
+            elapsed += Time.deltaTime;
+            transform.position = pos;
+            yield return null;
+        }
+    }
+
+    private Vector3 CameraPosition()
     {
         Vector3 pos = player.position + offset;
 
         pos.x = Mathf.Clamp(bottomLeftScreenWorld.x + pos.x, topLeft.x, bottomRight.x - screenWorldWidth) - bottomLeftScreenWorld.x;
         pos.y = Mathf.Clamp(bottomLeftScreenWorld.y + pos.y, bottomRight.y, topLeft.y + screenWorldHeight) - bottomLeftScreenWorld.y;
 
-        transform.position = Vector3.Lerp(transform.position, pos, smoothSpeed * Time.deltaTime * 300);
+        return pos;
     }
 }

@@ -37,6 +37,6 @@ public class SpriteStretch : MonoBehaviour
 
     private void LateUpdate()
     {
-        gameObject.transform.position = Camera.main.transform.position + offset;
+        gameObject.transform.position = Camera.main.transform.position + Vector3.forward * offset.z;
     }
 }
