@@ -21,14 +21,16 @@ public class InventoryScript : MonoBehaviour
 
         if (objs.Length > 1)
         {
-            Destroy(this.gameObject);
+            objs.Where(x => x != this.gameObject).ToList().ForEach(x => Destroy(x));
         }
 
         DontDestroyOnLoad(this.gameObject);
 
-
         AllPrizes = GetJson();
-        Inventory = new List<Prize>();
+        if (Inventory == null)
+        {
+            Inventory = new List<Prize>();
+        }
     }
 
     public List<Prize> GetJson()

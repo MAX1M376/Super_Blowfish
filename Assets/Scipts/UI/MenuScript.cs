@@ -38,11 +38,6 @@ public class MenuScript : MonoBehaviour
         }
     }
 
-    public void NextScene()
-    {
-        ChangeScene(SceneManager.GetActiveScene().buildIndex + 1);
-    }
-
     public void MenuScene()
     {
         SceneManager.LoadScene("Menu");
@@ -59,4 +54,10 @@ public class MenuScript : MonoBehaviour
             Debug.LogWarning("Scene don't exist");
         }
     }
+
+    public void NextScene()
+    {
+        ChangeScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
 }
