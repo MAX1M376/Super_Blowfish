@@ -43,8 +43,8 @@ public class CameraBehaviour : MonoBehaviour
 
         while (elapsed < duration)
         {
-            pos.x += Random.Range(-1.0f, 1.0f) * magnitude;
-            pos.y += Random.Range(-1.0f, 1.0f) * magnitude;
+            pos.x += Random.Range(-1.0f, 1.0f) * magnitude * Time.deltaTime;
+            pos.y += Random.Range(-1.0f, 1.0f) * magnitude * Time.deltaTime;
 
             pos.x = Mathf.Clamp(bottomLeftScreenWorld.x + pos.x, topLeft.x, bottomRight.x - screenWorldWidth) - bottomLeftScreenWorld.x;
             pos.y = Mathf.Clamp(bottomLeftScreenWorld.y + pos.y, bottomRight.y, topLeft.y + screenWorldHeight) - bottomLeftScreenWorld.y;
