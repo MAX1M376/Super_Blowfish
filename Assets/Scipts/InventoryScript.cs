@@ -17,15 +17,15 @@ public class InventoryScript : MonoBehaviour
 
     private void Awake()
     {
+        // Suppression des gameobject multiple
         GameObject[] objs = GameObject.FindGameObjectsWithTag("Inventory");
-
         if (objs.Length > 1)
         {
             objs.Where(x => x != this.gameObject).ToList().ForEach(x => Destroy(x));
         }
-
         DontDestroyOnLoad(this.gameObject);
 
+        // Initialisation de la liste de toutes les offres disponibles ainsi que de l'inventaire
         AllPrizes = GetJson();
         if (Inventory == null)
         {

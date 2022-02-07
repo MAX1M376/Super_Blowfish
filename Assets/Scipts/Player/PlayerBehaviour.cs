@@ -141,13 +141,17 @@ public class PlayerBehaviour : MonoBehaviour
         // Degonflement ou regonflement
         Inflate(isOnWater);
 
+        // Désactive la posibilité de se déplacé lorsque le niveau d'ai est a 0
         controlEnabled = body.InflateLevel != 0f;
+
+        // Si le niveau d'ai est a 0, qu'il ne bouge plus et qu'il touche le sol alors Gameover
         if (body.InflateLevel == 0f && rb.velocity == Vector2.zero && downHits.Count() > 0)
         {
             gameplay.GameOverScript.gameObject.SetActive(true);
             return;
         }
 
+        // Si le joueur est dans l'eau et qu'il n'y a plus de caisses dans le niveaux
         if (isOnWater && GameObject.FindGameObjectsWithTag(crateTag).Count() == 0)
         {
             controlEnabled = false;
