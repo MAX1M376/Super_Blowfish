@@ -36,10 +36,7 @@ public class InventoryItem : MonoBehaviour
         }
         else
         {
-            if (SceneManager.GetActiveScene().buildIndex != 0)
-            {
-                Debug.LogError("Gameplay components not load");
-            }
+            Debug.LogError("Gameplay components not load");
         }
     }
 
@@ -57,6 +54,8 @@ public class InventoryItem : MonoBehaviour
 
     public void OpenItem()
     {
+
+        gameplay.ShowItemScript.gameObject.SetActive(true);
         gameplay.ShowItemScript.ShowPrize(Prize);
     }
 }

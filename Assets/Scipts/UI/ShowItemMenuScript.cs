@@ -92,7 +92,10 @@ public class ShowItemMenuScript : MonoBehaviour
 
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {
-            gameplay.Gameplay();
+            if (!gameplay.InventoryScript.gameObject.activeSelf)
+            {
+                gameplay.Gameplay();
+            }
         }
     }
 

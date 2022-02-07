@@ -93,7 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd98a0ec9ce2f704e8d64df918b11508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowItem: {fileID: 0}
   textMesh: {fileID: 2154294196603298318}
   image: {fileID: 2154294195378443006}
 --- !u!114 &4226427651001581121
@@ -151,7 +150,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &4713341184576637745
 MonoBehaviour:
   m_ObjectHideFlags: 0
