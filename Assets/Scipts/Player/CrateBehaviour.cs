@@ -61,7 +61,7 @@ public class CrateBehaviour : MonoBehaviour
         if (timeBeforceHit >= recoveryTime)
         {
             actualLives -= damage;
-            StartCoroutine(Camera.main.gameObject.GetComponent<CameraBehaviour>().Shake(0.15f, 0.02f));
+            StartCoroutine(Camera.main.gameObject.GetComponent<CameraBehaviour>().Shake(0.15f, 1f));
             lastHit = Time.time;
         }
 
