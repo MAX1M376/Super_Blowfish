@@ -10,6 +10,7 @@ public class GameplayScript : MonoBehaviour
     public InventoryMenuScript InventoryScript;
     public GameOverMenuScript GameOverScript;
     public ClearLevelMenuScript ClearLevelScript;
+    public ConnectionMenuScript ConnectionScript;
 
     [Header("GameObject names :")]
     public string WindowToShowPrize;

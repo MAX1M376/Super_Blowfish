@@ -27,10 +27,7 @@ public class InventoryScript : MonoBehaviour
 
         // Initialisation de la liste de toutes les offres disponibles ainsi que de l'inventaire
         AllPrizes = GetJson();
-        if (Inventory == null)
-        {
-            Inventory = new List<Prize>();
-        }
+
     }
 
     public List<Prize> GetJson()
