@@ -7,6 +7,9 @@ public class MenuScript : MonoBehaviour
 {
     private GameplayScript gameplay;
 
+    [Header("Connection Button :")]
+    [SerializeField] private GameObject button;
+
     private void Awake()
     {
         var gameplayGO = GameObject.FindGameObjectWithTag("Gameplay");
@@ -27,7 +30,9 @@ public class MenuScript : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {
             gameplay.Paused();
+            return;
         }
+        button.SetActive(InventoryScript.User == null);
     }
 
     private void OnDisable()
@@ -45,6 +50,11 @@ public class MenuScript : MonoBehaviour
 
     public void ChangeScene(int buildIndex)
     {
+        if (InventoryScript.User == null)
+        {
+            return;
+        }
+
         try
         {
             SceneManager.LoadScene(buildIndex);

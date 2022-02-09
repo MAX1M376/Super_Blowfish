@@ -10,7 +10,14 @@ public class InventoryScript : MonoBehaviour
 {
     [HideInInspector] public static int PrizeEarnDuringLevel = 0;
     [HideInInspector] public static List<Prize> AllPrizes { get; private set; }
-    [HideInInspector] public static List<Prize> Inventory { get; set; }
+    [HideInInspector] public static User User { get; set; }
+    [HideInInspector] public static List<Prize> Inventory 
+    { 
+        get
+        {
+            return User.Inventory;
+        }
+    }
 
     [Header("Property")]
     [SerializeField] private Sprite defaultSprite;
@@ -27,7 +34,6 @@ public class InventoryScript : MonoBehaviour
 
         // Initialisation de la liste de toutes les offres disponibles ainsi que de l'inventaire
         AllPrizes = GetJson();
-
     }
 
     public List<Prize> GetJson()

@@ -724,6 +724,7 @@ MonoBehaviour:
   InventoryScript: {fileID: 1441910848}
   GameOverScript: {fileID: 0}
   ClearLevelScript: {fileID: 0}
+  ConnectionScript: {fileID: 0}
   WindowToShowPrize: ShowItemMenu
   WindowToShowInventory: InventoryMenu
   WindowToShowGameOver: 
@@ -1488,16 +1489,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 639588120}
-  - component: {fileID: 639588121}
   - component: {fileID: 639588123}
   - component: {fileID: 639588122}
+  - component: {fileID: 639588121}
   m_Layer: 5
   m_Name: ConnectionMenu
   m_TagString: Show Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &639588120
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3144,6 +3145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e2bcb9b3e4dfe24b8f26bce036c7d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 2137189980}
 --- !u!1 &1381619575
 GameObject:
   m_ObjectHideFlags: 0
@@ -3784,6 +3786,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 1
+      - m_Target: {fileID: 1332370319}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 1
 --- !u!114 &1528783239
 MonoBehaviour:
@@ -4759,7 +4773,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2137189981
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4838,7 +4852,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2137189984}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1332370319}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+      - m_Target: {fileID: 639588119}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &2137189984
 MonoBehaviour:
   m_ObjectHideFlags: 0
