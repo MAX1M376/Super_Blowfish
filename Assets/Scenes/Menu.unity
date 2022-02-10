@@ -724,7 +724,6 @@ MonoBehaviour:
   InventoryScript: {fileID: 1441910848}
   GameOverScript: {fileID: 0}
   ClearLevelScript: {fileID: 0}
-  ConnectionScript: {fileID: 0}
   WindowToShowPrize: ShowItemMenu
   WindowToShowInventory: InventoryMenu
   WindowToShowGameOver: 
