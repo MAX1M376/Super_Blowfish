@@ -1,20 +1,24 @@
 [
   {
+    "Id": 1,
     "Name": "Saucisse",
     "Description": "30% offert sur toutes les saucisses",
     "ImagePath": "Prizes/saucisse"
   },
   {
+    "Id": 2,
     "Name": "Simple réduction",
     "Description": "10% de reduction sur un produit au choix",
     "ImagePath": "Prizes/ticket"
   },
   {
+    "Id": 3,
     "Name": "Un mois de réduction",
     "Description": "5% sur l'ensemble des produits à condition d'avoir la somme des produits supérieur à 200€",
     "ImagePath": "Prizes/multiticket"
   },
   {
+    "Id": 4,
     "Name": "Machine à laver",
     "Description": "20% offert sur toute les machine a laver du magazins",
     "ImagePath": "Prizes/washing machine"

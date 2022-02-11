@@ -4,10 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class InventoryScript : MonoBehaviour
 {
+    private static Sprite DefaultSprite;
+
     [HideInInspector] public static int PrizeEarnDuringLevel = 0;
     [HideInInspector] public static List<Prize> AllPrizes { get; private set; }
     [HideInInspector] public static User User { get; set; }
@@ -22,7 +26,7 @@ public class InventoryScript : MonoBehaviour
     [Header("Property")]
     [SerializeField] private Sprite defaultSprite;
 
-    private void Awake()
+    private async void Awake()
     {
         // Suppression des gameobject multiple
         GameObject[] objs = GameObject.FindGameObjectsWithTag("Inventory");
@@ -32,39 +36,89 @@ public class InventoryScript : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
 
+        DefaultSprite = defaultSprite;
         // Initialisation de la liste de toutes les offres disponibles ainsi que de l'inventaire
-        AllPrizes = GetJson();
+        AllPrizes = await GetPrizes();
     }
 
-    public List<Prize> GetJson()
+    public static async Task<User> GetUser(int id)
     {
-        List<Prize> prizes = new List<Prize>();
-        try
+        var message = await GetRequest($"http://127.0.0.1:8080/inventory/{id}");
+        List<Prize> inventory = new List<Prize>();
+        foreach (JSONArray n in JSONNode.Parse(message).AsArray)
         {
-            var jsonRoot = JSON.Parse(Resources.Load<TextAsset>("prizes").text);
-            foreach (JSONNode n in jsonRoot)
+            for (int i = 0; i < n.Count; i++)
             {
-                Sprite image;
-                try
+                if (int.TryParse(n[i], out int invId))
                 {
-                    image = Resources.Load<Sprite>(n["ImagePath"]);
+                    inventory.Add(AllPrizes.First(x => x.Id == invId));
                 }
-                catch (Exception)
+                else
                 {
-                    image = defaultSprite;
+                    Debug.LogWarning($"Parse error: {n[i]}");
                 }
-                prizes.Add(new Prize
-                {
-                    Name = n["Name"],
-                    Description = n["Description"],
-                    Image = image
-                });
             }
         }
-        catch (Exception ex)
+        return new User
         {
-            prizes = new List<Prize> { new Prize { Name = "Error", Description = ex.Message, Image = defaultSprite } };
+            Id = id,
+            Inventory = inventory
+        };
+    }
+
+    public static async Task<List<Prize>> GetPrizes()
+    {
+        string message = await GetRequest($"http://127.0.0.1:8080/promos");
+        List<Prize> all = new List<Prize>();
+        foreach (JSONNode n in JSONNode.Parse(message))
+        {
+            Sprite image;
+            try
+            {
+                image = Resources.Load<Sprite>(n["ImagePath"]);
+            }
+            catch (Exception)
+            {
+                image = DefaultSprite;
+            }
+            all.Add(new Prize
+            {
+                Id = n["Id"],
+                Name = n["Name"],
+                Description = n["Description"],
+                Image = image
+            });
         }
-        return prizes;
+        return all;
+    }
+
+    public static async Task PostPrize(int prizeId)
+    {
+        await PostRequest($"http://127.0.0.1:8080/inventory", User.Id, prizeId);
+    }
+
+    private static async Task<string> GetRequest(string uri)
+    {
+        var request = UnityWebRequest.Get(uri);
+
+        // Request and wait for the desired page.
+        var task = request.SendWebRequest();
+        while (!task.isDone)
+            await Task.Yield();
+
+        return request.downloadHandler.text;
+    }
+
+    private static async Task<bool> PostRequest(string uri, int userId, int prizeId)
+    {
+        string postData = JsonUtility.ToJson(new { client_id = userId, promo_id = prizeId });
+        var request = UnityWebRequest.Post(uri, postData);
+
+        // Request and wait for the desired page.
+        var task = request.SendWebRequest();
+        while (!task.isDone)
+            await Task.Yield();
+
+        return request.isDone;
     }
 }

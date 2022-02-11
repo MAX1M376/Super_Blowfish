@@ -1,18 +1,15 @@
+using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class ConnectionMenuScript : MonoBehaviour
 {
-    public void GetUser()
+    public async void GetUser(int id)
     {
-        InventoryScript.User = new User
-        {
-            Id = 0,
-            Name = "Maxime",
-            Email = "maxime.adler76@gmail.com",
-            Inventory = Enumerable.Range(0, 2).Select(x => InventoryScript.AllPrizes[Random.Range(0, InventoryScript.AllPrizes.Count)]).ToList(),
-        };
+        InventoryScript.User = await InventoryScript.GetUser(id);
     }
 }

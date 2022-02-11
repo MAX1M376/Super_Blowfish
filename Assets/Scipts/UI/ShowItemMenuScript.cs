@@ -9,6 +9,7 @@ public class ShowItemMenuScript : MonoBehaviour
 {
     private bool isShow = false;
     private float size = 0.0f;
+    private int prizeId;
     private string _name;
     private string _description;
     private Sprite _image;
@@ -81,14 +82,16 @@ public class ShowItemMenuScript : MonoBehaviour
 
     public void ShowPrize(Prize prize)
     {
+        prizeId = prize.Id;
         Name = prize.Name;
         Description = prize.Description;
         Image = prize.Image;
     }
 
-    private void OnDisable()
+    private async void OnDisable()
     {
         isShow = false;
+        await InventoryScript.PostPrize(prizeId);
 
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {
